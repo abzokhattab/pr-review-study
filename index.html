@@ -182,6 +182,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .crit-row{display:grid;grid-template-columns:1fr 400px;gap:16px;align-items:center;padding:11px 13px;background:var(--bg2);border:1px solid var(--brd);border-radius:8px;transition:box-shadow .15s}
 .crit-q{font-size:.85rem;color:var(--t1);line-height:1.4}
 .crit-q .crit-cat{display:block;font-size:.7rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.crit-q .crit-short{display:block;font-size:.92rem;font-weight:700;color:var(--t1);margin-bottom:2px}
+.crit-q .crit-desc{display:block;font-size:.78rem;color:var(--t2)}
 .crit-opts{display:flex;gap:0}
 .crit-opts label{flex:1;text-align:center;cursor:pointer;padding:9px 6px;border:1px solid var(--brd);background:var(--bg1);color:var(--t3);font-size:.78rem;font-weight:600;transition:all .15s;white-space:nowrap}
 .crit-opts label:first-child{border-radius:7px 0 0 7px}
@@ -368,11 +370,11 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
     <h2>What You'll Do</h2>
     <p>For each of <strong>6 real Pull Requests</strong> from open-source projects, you will:</p>
     <ol>
-      <li><strong>Read the PR context</strong> &mdash; every PR starts with a short plain-language box explaining what the project is and what the change does (no knowledge of the project or of Python is needed). Below it are the original title, description, and code diff. You don't need to understand every line of the diff; the plain-language box gives you the intent.</li>
+      <li><strong>Read the PR context</strong> &mdash; every PR starts with a short plain-language box explaining what the project is and what the change does (no knowledge of the project or of Python is needed). The code diff is available below it but <strong>collapsed by default</strong> &mdash; expand it only if you want to check a detail; the plain-language box gives you the intent.</li>
       <li><strong>Read both AI-generated reviews</strong> side by side &mdash; <strong style="color:#58a6ff">Review A</strong> and <strong style="color:#a371f7">Review B</strong>. You won't know which AI strategy produced which review. Each review starts with a short <em>summary</em> to help you orient quickly &mdash; it's just a reading aid; please base your judgement on the <strong>full review</strong> below it.</li>
       <li><strong>Judge each review on 6 criteria</strong> &mdash; for every criterion, mark whether <strong style="color:#58a6ff">Review A</strong> does it better, <strong style="color:#a371f7">Review B</strong> does it better, <strong style="color:#3fb950">Both</strong> address it about equally, or <strong>Neither</strong> addresses it.</li>
       <li><strong>Give one overall preference</strong> &mdash; after the 6 criteria, make a single holistic call: which review is more useful overall (or about the same).</li>
-      <li><strong>Briefly explain why</strong> in a text box (2&ndash;3 sentences is enough).</li>
+      <li><strong>Briefly explain why</strong> in a text box (optional &mdash; one sentence is enough).</li>
       <li><strong>Rate the difficulty</strong> of the comparison (1&ndash;5).</li>
     </ol>
 
@@ -402,17 +404,17 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
       <span class="rverify-chip v-verified" style="margin:0 2px">file.py</span> the file exists <em>and</em> genuinely imports/uses the changed code;
       <span class="rverify-chip v-exists" style="margin:0 2px">file.py</span> the file exists but we found no direct connection to the change;
       <span class="rverify-chip v-not_found" style="margin:0 2px">file.py</span> no such file exists &mdash; the review invented it.
-      <em>Hover any badge for its meaning.</em> One caution: a <em>verified</em> badge confirms the file is real and connected &mdash; it does not confirm every claim the review makes <em>about</em> that file. The review's reasoning is still yours to judge.</p>
+      <em>Hover any badge for its meaning.</em> Two cautions: a <em>verified</em> badge confirms the file is real and connected &mdash; it does not confirm every claim the review makes <em>about</em> that file. And a review that names <em>more</em> files is not automatically better &mdash; judge whether what it names actually matters for this PR.</p>
 
-    <h3>Using the diff</h3>
-    <p>The diff shows exactly what code changed. Use it to check: does the review describe a real risk in the changed code, or a hypothetical one? (File names are already checked for you by the badges &mdash; focus on whether the <em>reasoning</em> holds up.)</p>
+    <h3>Using the diff (optional)</h3>
+    <p>The diff shows exactly what code changed. It is collapsed by default &mdash; you can judge the reviews without it. Expand it when you want to check whether a review describes a real risk in the changed code or a hypothetical one.</p>
 
     <h3>Tips</h3>
     <ul>
       <li>There are no right or wrong answers &mdash; we want your honest impression.</li>
       <li>Some pairs will look similar. That's expected. Even a small but concrete difference counts.</li>
       <li>If you're unsure, "no preference" is a valid answer &mdash; don't force a pick.</li>
-      <li>The "why" text box is important &mdash; even one sentence helps us understand your reasoning.</li>
+      <li>The "why" text box is optional, but even one sentence helps us understand your reasoning.</li>
     </ul>
   </div>
 
@@ -471,9 +473,9 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
     <div class="meta"><span>example/web-service</span></div>
   </div>
 
-  <div class="diff-section">
+  <div class="diff-section collapsed">
     <div class="diff-header" onclick="this.closest('.diff-section').classList.toggle('collapsed');this.querySelector('.diff-toggle').textContent=this.closest('.diff-section').classList.contains('collapsed')?'click to expand':'click to collapse'">
-      <span>Diff</span><span class="diff-toggle">click to collapse</span>
+      <span>Diff &mdash; optional reference</span><span class="diff-toggle">click to expand</span>
     </div>
     <div class="diff-view">
       <div class="diff-file">
@@ -582,7 +584,7 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
 
   <div class="diff-section" id="diffSection">
     <div class="diff-header" onclick="document.getElementById('diffSection').classList.toggle('collapsed');this.querySelector('.diff-toggle').textContent=this.closest('.diff-section').classList.contains('collapsed')?'click to expand':'click to collapse'">
-      <span>Diff &mdash; read this first, then check whether the reviews below reference real files and functions from this diff</span><span class="diff-toggle">click to collapse</span>
+      <span>Diff &mdash; the exact code changes (optional: expand if you want to check a detail; the plain-language box above covers the intent)</span><span class="diff-toggle">click to expand</span>
     </div>
     <div class="diff-view" id="diffC"></div>
   </div>
@@ -600,7 +602,7 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
 
   <div class="pref5-section" id="pref5Section">
     <h4>For each criterion, which review better addresses it?</h4>
-    <p class="pref5-sub">Don't pick an overall winner. For each of the 6 criteria below, choose: <strong style="color:#58a6ff">Review A</strong> does it better, <strong style="color:#a371f7">Review B</strong> does it better, <strong style="color:#3fb950">Both</strong> address it about equally, or <strong>Neither</strong> addresses it. Use the <strong>highlighted differences</strong>, the <strong>count strip</strong>, and the <strong>file-reference check</strong> (every file a review names was verified against the real repository) &mdash; but a difference only counts if it actually <strong>matters</strong> for that criterion on this PR.</p>
+    <p class="pref5-sub">Don't pick an overall winner. For each criterion below, choose: <strong style="color:#58a6ff">Review A</strong> does it better, <strong style="color:#a371f7">Review B</strong> does it better, <strong style="color:#3fb950">Both</strong> address it about equally, or <strong>Neither</strong> addresses it. The highlighting and badges are reading aids only &mdash; naming more files or items is <strong>not automatically better</strong>. What counts is whether what a review says actually <strong>matters</strong> for this PR.</p>
     <div class="crit-grid" id="critGrid"></div>
   </div>
 
@@ -615,7 +617,7 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
   </div>
 
   <div class="why-section">
-    <h4>Why did you choose that? <span style="font-weight:400;color:var(--t3);font-size:.82rem">(required &mdash; 1&ndash;3 sentences)</span></h4>
+    <h4>Why did you choose that? <span style="font-weight:400;color:var(--t3);font-size:.82rem">(optional &mdash; even one short sentence helps us a lot)</span></h4>
     <p class="why-sub">What specific difference in the reviews drove your choice? E.g. "Review A named the exact test file; Review B only said 'add tests'."</p>
     <textarea id="whyText" placeholder="e.g. 'Review A named the specific function and line number; Review B only said the method is risky.' or 'Both said the same thing about test coverage but Review B was more concrete about which file to add tests to.'"></textarea>
   </div>
@@ -689,21 +691,16 @@ let raterId = "", taskOrder = [], modeMap = {}, ratings = {},
     curTask = 0, taskMs = 0, timerH = null, startedAt = null,
     demographics = {}, githubClickLog = {}, submittedSig = {};
 
-// Minimum characters for the mandatory "why" rationale. Must match the
-// completeness check (isComplete) and the submit-time validation so a
-// half-typed rationale is never treated as a finished, submittable task.
-const MIN_WHY = 10;
-
-// A rating only counts as finished once all three mandatory fields are
-// present (preference, a rationale of at least MIN_WHY chars, difficulty).
-// firstOpen() relies on this so a partially-filled task that the rater
-// navigated away from is still revisited on resume rather than silently
-// skipped (and therefore never submitted to the Sheet).
+// A rating counts as finished once the mandatory fields are present
+// (criteria, preference, difficulty). The "why" rationale became optional
+// in v2 (2026-08-01, pilot feedback); empty notes are still recorded and
+// surfaced through the notes quality flags. firstOpen() relies on this so
+// a partially-filled task that the rater navigated away from is still
+// revisited on resume rather than silently skipped.
 function isComplete(r) {
   return !!r
     && critComplete(r.criteria)
     && !!r.overall
-    && typeof r.why === "string" && r.why.trim().length >= MIN_WHY
     && !!r.difficulty;
 }
 
@@ -998,7 +995,10 @@ function buildCritGrid(containerId, namePrefix) {
     row.className = "crit-row";
     row.dataset.cid = c.id;
     row.innerHTML =
-      `<div class="crit-q"><span class="crit-cat">${c.category}</span>${c.description}</div>` +
+      `<div class="crit-q"><span class="crit-cat">${c.category}</span>` +
+      (c.short ? `<strong class="crit-short">${c.short}</strong><span class="crit-desc">${c.description}</span>`
+               : c.description) +
+      `</div>` +
       `<div class="crit-opts">` +
       `<label data-c="A"><input type="radio" name="${k}" value="A">Review A</label>` +
       `<label data-c="both"><input type="radio" name="${k}" value="both">Both</label>` +
@@ -1134,10 +1134,11 @@ function render(idx) {
   else document.getElementById("bodySection").style.display="none";
 
   document.getElementById("diffC").innerHTML = renderDiff(pr.diff);
-  // Start diff expanded
+  // v2 (2026-08-01): diff collapsed by default — pilot feedback said the
+  // required reading was too heavy; the diff is optional reference.
   const ds = document.getElementById("diffSection");
-  ds.classList.remove("collapsed");
-  ds.querySelector(".diff-toggle").textContent = "click to collapse";
+  ds.classList.add("collapsed");
+  ds.querySelector(".diff-toggle").textContent = "click to expand";
 
   buildReviewPair(pr, task.taskId);
 
@@ -1216,13 +1217,8 @@ function submitTask() {
     sec.scrollIntoView({ behavior:"smooth", block:"center" });
     return false;
   }
-  if (!why || why.length < MIN_WHY) {
-    document.getElementById("whyText").focus();
-    const w = document.getElementById("uWarn");
-    w.textContent = "⚠ Please write a brief reason for your choices (1 sentence is enough)";
-    w.style.display = "inline";
-    return false;
-  }
+  // v2 (2026-08-01): "why" is optional — pilot feedback; empty notes are
+  // still recorded and surfaced via the notes quality flags.
   if (!diff) {
     const w = document.getElementById("uWarn");
     w.textContent = "⚠ Please rate the difficulty (1–5)";
