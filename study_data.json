@@ -71,7 +71,7 @@
           "Flags that the documentation was not updated for the new behavior."
         ],
         "kg": [
-          "Names `src/requests/sessions.py` and `src/requests/api.py` as files that use `prepare_body` and could be affected.",
+          "Lists `src/requests/sessions.py` and `src/requests/api.py` as files that use `prepare_body` and could be affected.",
           "Notes the new test in `tests/test_requests.py` covers only the one wrapper type this PR fixes; other wrapper types stay untested.",
           "Suggests checking those two files before merging."
         ]
@@ -193,14 +193,14 @@
       },
       "review_summaries": {
         "baseline_strict": [
-          "Warns that a wrongly configured `TRUSTED_HOSTS` would make the app reject requests with unexpected \"400\" errors (request refused).",
+          "Cautions that a wrongly configured `TRUSTED_HOSTS` would make the app reject requests with unexpected \"400\" errors (request refused).",
           "Flags missing tests for `TRUSTED_HOSTS` left unset (`None`) and for invalid host patterns; the test file is `tests/test_request.py`.",
           "Notes `docs/config.rst` gives no examples for development vs production setups."
         ],
         "kg": [
-          "Names `src/flask/logging.py` and `src/flask/sessions.py` as files that read request data and could be affected by the new host check.",
+          "Warns `request.host` behavior now depends on configuration \u2014 a breaking change to call out in release notes.",
           "Suggests adding tests for `TRUSTED_HOSTS` set to `None` or empty in `tests/test_instance_config.py`.",
-          "Warns `request.host` behavior now depends on configuration \u2014 a breaking change to call out in release notes."
+          "Names `src/flask/logging.py` and `src/flask/sessions.py` as files that read request data and could be affected by the new host check."
         ]
       },
       "review_unique": {
@@ -334,14 +334,14 @@
       },
       "review_summaries": {
         "baseline_strict": [
-          "Warns the stricter type declaration on `echo` (`t.Any` to `object`) could break code that passes other kinds of values.",
+          "Points out that the stricter type declaration on `echo` (`t.Any` to `object`) could break code that passes other kinds of values.",
           "Questions whether the new `match` statement (a newer Python feature) works on older Python versions.",
           "Flags that `None` and empty text with the `nl=False` option (print without a line break) are untested; the test file is `tests/test_utils.py`."
         ],
         "kg": [
-          "Names `src/click/core.py` and `src/click/termui.py` as files that use `echo` and could be affected by the stricter type declaration.",
-          "Points to `src/click/testing.py` as a related testing helper beyond `tests/test_utils.py`.",
-          "Flags there is no test for calling `echo` with values that are not text or bytes (`str`/`bytes`/`bytearray`)."
+          "Identifies `src/click/core.py` and `src/click/termui.py` as files that use `echo` and could be affected by the stricter type declaration.",
+          "Flags there is no test for calling `echo` with values that are not text or bytes (`str`/`bytes`/`bytearray`).",
+          "Points to `src/click/testing.py` as a related testing helper beyond `tests/test_utils.py`."
         ]
       },
       "review_unique": {
@@ -475,7 +475,7 @@
           "Flags that long or multi-step redirect chains stay untested."
         ],
         "kg": [
-          "Names `src/requests/__init__.py` and `src/requests/api.py` as files that depend on `resolve_redirects`.",
+          "Points to `src/requests/__init__.py` and `src/requests/api.py` as files that depend on `resolve_redirects`.",
           "Notes the new test in `tests/test_requests.py` covers only the self-reference case; longer redirect chains stay untested.",
           "Suggests optionally keeping the original request in the history so existing code keeps working."
         ]
@@ -600,7 +600,7 @@
       },
       "review_summaries": {
         "baseline_strict": [
-          "Warns the `stream_with_context` rewrite changes when request information is available during streaming, which could break existing async views.",
+          "Notes the `stream_with_context` rewrite changes when request information is available during streaming, which could break existing async views.",
           "Flags missing tests for nested usage and for errors raised mid-stream; the test file is `tests/test_helpers.py`.",
           "Notes the updated documentation text may not fully explain the change for existing users."
         ],
@@ -736,12 +736,12 @@
       },
       "review_summaries": {
         "baseline_strict": [
-          "Warns the fix changes the usage message shown to users, which could break scripts that parse that output.",
           "Notes new tests in `tests/test_basic.py` cover `Choice` and `DateTime` placeholders; other bracketed placeholder types stay untested.",
+          "Warns the fix changes the usage message shown to users, which could break scripts that parse that output.",
           "Suggests checking the codebase for other places that format placeholders the same way."
         ],
         "kg": [
-          "Names `src/click/types.py` and `src/click/parser.py` as files that rely on `make_metavar` (the function that builds those placeholders) and could be affected.",
+          "Lists `src/click/types.py` and `src/click/parser.py` as files that rely on `make_metavar` (the function that builds those placeholders) and could be affected.",
           "Points to `tests/test_shell_completion.py`, `tests/test_context.py`, and `tests/test_defaults.py` as related test files.",
           "Flags that nested choice placeholders stay untested and documentation was not updated."
         ]
@@ -866,7 +866,7 @@
   ],
   "summary_meta": {
     "model": "hand-authored",
-    "note": "Neutral TL;DR from review text only (blinding-safe), identifiers preserved; v3 convention. Reworded 2026-07-13 into plainer language for raters unfamiliar with the repos/Python (same points, same identifiers, arm-symmetric edits)."
+    "note": "Neutral TL;DR from review text only (blinding-safe), identifiers preserved; v3 convention. Reworded 2026-07-13 into plainer language for raters unfamiliar with the repos/Python (same points, same identifiers, arm-symmetric edits). 2026-08-01 amendment: opening verbs varied and bullets ordered by position in the review body (order_bullets), removing the per-arm signature pattern (kg always led with 'Names', baseline with 'Warns')."
   },
   "pr_context_meta": {
     "method": "hand-written from PR title/body/diff only (never from a review) \u2014 arm-neutral, blinding-safe",
