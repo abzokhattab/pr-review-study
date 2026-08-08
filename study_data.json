@@ -1,5 +1,5 @@
 {
-  "version": "python-prs-pilot-v2",
+  "version": "python-prs-study-v4-neutral-reference-evidence",
   "criteria": [
     {
       "id": "F3*",
@@ -87,14 +87,38 @@
       },
       "answer_key": {
         "baseline_strict": {
-          "src/requests/models.py": "in_diff",
-          "tests/test_requests.py": "in_diff"
+          "src/requests/models.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "tests/test_requests.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          }
         },
         "kg": {
-          "src/requests/api.py": "verified",
-          "src/requests/models.py": "in_diff",
-          "src/requests/sessions.py": "verified",
-          "tests/test_requests.py": "in_diff"
+          "src/requests/api.py": {
+            "existence": "exists",
+            "relationship": "indirect",
+            "basis": "Public API calls Session.request, which reaches request-body preparation."
+          },
+          "src/requests/models.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "src/requests/sessions.py": {
+            "existence": "exists",
+            "relationship": "indirect",
+            "basis": "Session prepares a PreparedRequest; PreparedRequest.prepare then calls prepare_body."
+          },
+          "tests/test_requests.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          }
         }
       },
       "review_counts": {
@@ -219,16 +243,48 @@
       },
       "answer_key": {
         "baseline_strict": {
-          "docs/config.rst": "in_diff",
-          "src/flask/app.py": "in_diff",
-          "tests/test_request.py": "in_diff"
+          "docs/config.rst": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "src/flask/app.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "tests/test_request.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          }
         },
         "kg": {
-          "src/flask/app.py": "in_diff",
-          "src/flask/logging.py": "verified",
-          "src/flask/sessions.py": "verified",
-          "tests/test_instance_config.py": "verified",
-          "tests/test_request.py": "in_diff"
+          "src/flask/app.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "src/flask/logging.py": {
+            "existence": "exists",
+            "relationship": "exists",
+            "basis": "Reads request.environ; no import of changed app.py or TRUSTED_HOSTS behavior connection was established."
+          },
+          "src/flask/sessions.py": {
+            "existence": "exists",
+            "relationship": "type_only",
+            "basis": "References Flask for typing; no host-validation behavior connection was established."
+          },
+          "tests/test_instance_config.py": {
+            "existence": "exists",
+            "relationship": "exists",
+            "basis": "File exists, but its tests do not establish a TRUSTED_HOSTS connection."
+          },
+          "tests/test_request.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          }
         }
       },
       "review_counts": {
@@ -334,7 +390,7 @@
       },
       "review_summaries": {
         "baseline_strict": [
-          "Points out that the stricter type declaration on `echo` (`t.Any` to `object`) could break code that passes other kinds of values.",
+          "Points out that changing the `message` parameter from `t.Any` to `object` could break code that passes other kinds of values.",
           "Questions whether the new `match` statement (a newer Python feature) works on older Python versions.",
           "Flags that `None` and empty text with the `nl=False` option (print without a line break) are untested; the test file is `tests/test_utils.py`."
         ],
@@ -360,15 +416,43 @@
       },
       "answer_key": {
         "baseline_strict": {
-          "src/click/utils.py": "in_diff",
-          "tests/test_utils.py": "in_diff"
+          "src/click/utils.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "tests/test_utils.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          }
         },
         "kg": {
-          "src/click/core.py": "verified",
-          "src/click/termui.py": "verified",
-          "src/click/testing.py": "verified",
-          "src/click/utils.py": "in_diff",
-          "tests/test_utils.py": "in_diff"
+          "src/click/core.py": {
+            "existence": "exists",
+            "relationship": "direct",
+            "basis": "Contains runtime call sites of echo, the function changed by this PR."
+          },
+          "src/click/termui.py": {
+            "existence": "exists",
+            "relationship": "direct",
+            "basis": "Contains runtime call sites of echo, the function changed by this PR."
+          },
+          "src/click/testing.py": {
+            "existence": "exists",
+            "relationship": "module_only",
+            "basis": "Imports utilities from the changed module, but no changed echo behavior connection was established."
+          },
+          "src/click/utils.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "tests/test_utils.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          }
         }
       },
       "review_counts": {
@@ -470,7 +554,7 @@
       },
       "review_summaries": {
         "baseline_strict": [
-          "Warns the `resolve_redirects` change breaks users who expect the original request to appear in `resp.history` (the recorded chain of redirect hops).",
+          "Warns that changing how `resp.history` is built could break integrations that rely on the previous redirect-history behavior.",
           "Names the new test `test_redirect_history_no_self_reference` in `tests/test_requests.py`.",
           "Flags that long or multi-step redirect chains stay untested."
         ],
@@ -492,15 +576,38 @@
       },
       "answer_key": {
         "baseline_strict": {
-          "sessions.py": "in_diff",
-          "src/requests/sessions.py": "in_diff",
-          "tests/test_requests.py": "in_diff"
+          "src/requests/sessions.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "tests/test_requests.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          }
         },
         "kg": {
-          "src/requests/__init__.py": "verified",
-          "src/requests/api.py": "verified",
-          "src/requests/sessions.py": "in_diff",
-          "tests/test_requests.py": "in_diff"
+          "src/requests/__init__.py": {
+            "existence": "exists",
+            "relationship": "indirect",
+            "basis": "Exports the public request API; redirect handling is reached indirectly through Session."
+          },
+          "src/requests/api.py": {
+            "existence": "exists",
+            "relationship": "indirect",
+            "basis": "Public API constructs a Session, whose redirect path reaches resolve_redirects."
+          },
+          "src/requests/sessions.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "tests/test_requests.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          }
         }
       },
       "review_counts": {
@@ -606,7 +713,7 @@
         ],
         "kg": [
           "Names `src/flask/templating.py` and `src/flask/blueprints.py` as files that use `stream_with_context` and could be affected.",
-          "Flags missing tests for an error raised mid-stream, or request information being cleaned up before streaming starts.",
+          "Flags missing tests for an error raised mid-stream or for the context being manually popped before iteration.",
           "Suggests double-checking that ordinary (non-async) views still work after the rewrite."
         ]
       },
@@ -625,14 +732,38 @@
       },
       "answer_key": {
         "baseline_strict": {
-          "src/flask/helpers.py": "in_diff",
-          "tests/test_helpers.py": "in_diff"
+          "src/flask/helpers.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "tests/test_helpers.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          }
         },
         "kg": {
-          "src/flask/blueprints.py": "verified",
-          "src/flask/helpers.py": "in_diff",
-          "src/flask/templating.py": "verified",
-          "tests/test_helpers.py": "in_diff"
+          "src/flask/blueprints.py": {
+            "existence": "exists",
+            "relationship": "module_only",
+            "basis": "Imports another helper from helpers.py; it does not use stream_with_context."
+          },
+          "src/flask/helpers.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "src/flask/templating.py": {
+            "existence": "exists",
+            "relationship": "direct",
+            "basis": "Directly imports and calls stream_with_context when streaming templates."
+          },
+          "tests/test_helpers.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          }
         }
       },
       "review_counts": {
@@ -732,7 +863,7 @@
       "diff": "diff --git a/CHANGES.md b/CHANGES.md\nindex 8991e8257..90b93ed80 100644\n--- a/CHANGES.md\n+++ b/CHANGES.md\n@@ -18,6 +18,8 @@ Unreleased\n   stream when no external pager runs, completing the partial\n   `I/O operation on closed file` fix from {pr}`3482`. {issue}`3449`\n   {pr}`3533`\n+- Fix CLI usage symopsis for optional arguments producing double square brackets\n+  `[[a|b|c]]...` whose type already brackets their metavar. {pr}`3578`\n \n ## Version 8.4.1\n \ndiff --git a/src/click/core.py b/src/click/core.py\nindex d2db291d0..d7ecbefbc 100644\n--- a/src/click/core.py\n+++ b/src/click/core.py\n@@ -3571,9 +3571,14 @@ def make_metavar(self, ctx: Context) -> str:\n         var = self.type.get_metavar(param=self, ctx=ctx)\n         if not var:\n             var = self.name.upper()\n+        # Types like ``Choice`` and ``DateTime`` already surround their metavar\n+        # with square brackets to enumerate the allowed values. Reuse those\n+        # outer brackets as the optional-argument indicator instead of wrapping\n+        # the metavar in a second pair, which would produce ``[[a|b|c]]``.\n+        already_bracketed = var.startswith(\"[\") and var.endswith(\"]\")\n         if self.deprecated:\n             var += \"!\"\n-        if not self.required:\n+        if not self.required and not already_bracketed:\n             var = f\"[{var}]\"\n         if self.nargs != 1:\n             var += \"...\"\ndiff --git a/tests/test_basic.py b/tests/test_basic.py\nindex 3f7352879..0d5411586 100644\n--- a/tests/test_basic.py\n+++ b/tests/test_basic.py\n@@ -569,6 +569,46 @@ def cli(method: str | None):\n     assert result.output.startswith(\"Usage: cli [OPTIONS] {not-none|none}\\n\")\n \n \n+def test_choice_argument_optional_metavar(runner):\n+    \"\"\"Optional Choice arguments reuse the type's brackets instead of doubling.\n+\n+    Without this the usage line for a ``Choice`` argument with ``nargs=-1`` or\n+    ``required=False`` rendered as ``[[a|b|c]]``: one pair from ``Choice`` to\n+    enumerate values, a second pair from ``Argument`` to mark it optional.\n+    \"\"\"\n+\n+    @click.command()\n+    @click.argument(\"method\", type=click.Choice([\"foo\", \"bar\", \"baz\"]), nargs=-1)\n+    def cli_variadic(method):\n+        pass\n+\n+    @click.command()\n+    @click.argument(\"method\", type=click.Choice([\"foo\", \"bar\", \"baz\"]), required=False)\n+    def cli_optional(method):\n+        pass\n+\n+    variadic = runner.invoke(cli_variadic, [\"--help\"]).output\n+    assert \"Usage: cli-variadic [OPTIONS] [foo|bar|baz]...\\n\" in variadic\n+    assert \"[[foo|bar|baz]]\" not in variadic\n+\n+    optional = runner.invoke(cli_optional, [\"--help\"]).output\n+    assert \"Usage: cli-optional [OPTIONS] [foo|bar|baz]\\n\" in optional\n+    assert \"[[foo|bar|baz]]\" not in optional\n+\n+\n+def test_datetime_argument_optional_metavar(runner):\n+    \"\"\"``DateTime`` arguments behave the same way as ``Choice``.\"\"\"\n+\n+    @click.command()\n+    @click.argument(\"when\", type=click.DateTime(formats=[\"%Y-%m-%d\"]), required=False)\n+    def cli(when):\n+        pass\n+\n+    result = runner.invoke(cli, [\"--help\"])\n+    assert \"Usage: cli [OPTIONS] [%Y-%m-%d]\\n\" in result.output\n+    assert \"[[%Y-%m-%d]]\" not in result.output\n+\n+\n def test_datetime_option_default(runner):\n     @click.command()\n     @click.option(\"--start_date\", type=click.DateTime())\n",
       "reviews": {
         "baseline_strict": "## Problems found\n1. The change might affect how optional arguments are displayed across the CLI, potentially impacting other components that rely on this formatting.\n2. There is a risk of breaking existing integrations if other parts of the codebase expect the previous double-bracketed format.\n3. The fix might not cover all edge cases, such as other types that might also use brackets in their metavar.\n4. The documentation in `CHANGES.md` is updated, but there might be other documentation or API contracts that need updating.\n\n## Files and lines referenced\n- `src/click/core.py:3571-3578`: Changes in the `make_metavar` method to avoid double-bracketing.\n- `tests/test_basic.py:569-613`: New tests added to verify the correct rendering of optional arguments with `Choice` and `DateTime` types.\n\n## What could go wrong\n- The change alters the output format of CLI usage messages, which could break scripts or integrations that parse these messages.\n- Existing scripts or documentation that rely on the previous format might not work as expected.\n- Other types similar to `Choice` and `DateTime` that might also use brackets in their metavar are not explicitly tested.\n\n## Suggestions\n1. **Fix:** Ensure that all types that might use brackets in their metavar are identified and handled similarly.\n2. **Tests:** Add tests for other types that might be affected by this change to ensure comprehensive coverage.\n3. **Risks:** Review and update any documentation or API contracts that might be affected by this change to prevent integration issues.\n",
-        "kg": "## Problems found\n1. The change in `make_metavar` could potentially affect other parameter types that rely on the same logic for rendering their metavar, leading to unexpected behavior if not properly accounted for.\n2. The modification might impact other components that depend on `make_metavar`, such as `src/click/types.py` and `src/click/parser.py`, which could lead to inconsistencies in how metatvars are displayed.\n3. While new tests are added, edge cases such as nested choice types or combinations with other parameter decorators are not explicitly tested.\n4. The change in behavior for optional arguments with choices is not documented in the API documentation, which could lead to confusion for developers relying on the previous behavior.\n\n## Files and lines referenced\n- `src/click/core.py:3571-3578`: Changes in `make_metavar` function logic.\n- `tests/test_basic.py:569-611`: New tests for choice and datetime arguments.\n- `src/click/types.py`: Uses `make_metavar` for type handling.\n- `src/click/parser.py`: Relies on metavar formatting for parsing logic.\n- `tests/test_shell_completion.py`: Related to argument completion.\n- `tests/test_context.py`: Tests context handling which might be affected by metavar changes.\n- `tests/test_defaults.py`: Tests default values which could interact with metavar logic.\n\n## What could go wrong\n- Potential breakage in metavar rendering for other parameter types if they are not correctly handled by the new logic.\n- Existing CLI tools using `click` might display incorrect usage messages if they rely on the previous behavior.\n- Nested choice types or combinations with other decorators might not render correctly.\n\n## Suggestions\n1. **Fix:** Ensure that the `make_metavar` logic is robust for all parameter types, not just `Choice` and `DateTime`.\n2. **Tests:** Add tests for nested choice types and combinations with other decorators to ensure comprehensive coverage.\n3. **Documentation:** Update the API documentation to reflect the changes in metavar rendering for optional arguments with choices.\n"
+        "kg": "## Problems found\n1. The change in `make_metavar` could potentially affect other parameter types that rely on the same logic for rendering their metavar, leading to unexpected behavior if not properly accounted for.\n2. The modification might impact other components that depend on `make_metavar`, such as `src/click/types.py` and `src/click/parser.py`, which could lead to inconsistencies in how metavars are displayed.\n3. While new tests are added, edge cases such as nested choice types or combinations with other parameter decorators are not explicitly tested.\n4. The change in behavior for optional arguments with choices is not documented in the API documentation, which could lead to confusion for developers relying on the previous behavior.\n\n## Files and lines referenced\n- `src/click/core.py:3571-3578`: Changes in `make_metavar` function logic.\n- `tests/test_basic.py:569-611`: New tests for choice and datetime arguments.\n- `src/click/types.py`: Uses `make_metavar` for type handling.\n- `src/click/parser.py`: Relies on metavar formatting for parsing logic.\n- `tests/test_shell_completion.py`: Related to argument completion.\n- `tests/test_context.py`: Tests context handling which might be affected by metavar changes.\n- `tests/test_defaults.py`: Tests default values which could interact with metavar logic.\n\n## What could go wrong\n- Potential breakage in metavar rendering for other parameter types if they are not correctly handled by the new logic.\n- Existing CLI tools using `click` might display incorrect usage messages if they rely on the previous behavior.\n- Nested choice types or combinations with other decorators might not render correctly.\n\n## Suggestions\n1. **Fix:** Ensure that the `make_metavar` logic is robust for all parameter types, not just `Choice` and `DateTime`.\n2. **Tests:** Add tests for nested choice types and combinations with other decorators to ensure comprehensive coverage.\n3. **Documentation:** Update the API documentation to reflect the changes in metavar rendering for optional arguments with choices.\n"
       },
       "review_summaries": {
         "baseline_strict": [
@@ -743,7 +874,7 @@
         "kg": [
           "Lists `src/click/types.py` and `src/click/parser.py` as files that rely on `make_metavar` (the function that builds those placeholders) and could be affected.",
           "Points to `tests/test_shell_completion.py`, `tests/test_context.py`, and `tests/test_defaults.py` as related test files.",
-          "Flags that nested choice placeholders stay untested and documentation was not updated."
+          "Flags that nested choice placeholders stay untested and the API documentation was not updated."
         ]
       },
       "review_unique": {
@@ -762,17 +893,58 @@
       },
       "answer_key": {
         "baseline_strict": {
-          "src/click/core.py": "in_diff",
-          "tests/test_basic.py": "in_diff"
+          "CHANGES.md": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "src/click/core.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "tests/test_basic.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          }
         },
         "kg": {
-          "src/click/core.py": "in_diff",
-          "src/click/parser.py": "verified",
-          "src/click/types.py": "verified",
-          "tests/test_basic.py": "in_diff",
-          "tests/test_context.py": "verified",
-          "tests/test_defaults.py": "verified",
-          "tests/test_shell_completion.py": "verified"
+          "src/click/core.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "src/click/parser.py": {
+            "existence": "exists",
+            "relationship": "type_only",
+            "basis": "References core parameter classes only for typing; no make_metavar display connection was established."
+          },
+          "src/click/types.py": {
+            "existence": "exists",
+            "relationship": "related",
+            "basis": "Choice and DateTime provide bracketed metavar text consumed by Argument.make_metavar."
+          },
+          "tests/test_basic.py": {
+            "existence": "exists",
+            "relationship": "changed",
+            "basis": "This file is changed by the PR itself."
+          },
+          "tests/test_context.py": {
+            "existence": "exists",
+            "relationship": "exists",
+            "basis": "File exists, but no test of the changed metavar behavior was established."
+          },
+          "tests/test_defaults.py": {
+            "existence": "exists",
+            "relationship": "exists",
+            "basis": "File exists, but no test of the changed metavar behavior was established."
+          },
+          "tests/test_shell_completion.py": {
+            "existence": "exists",
+            "relationship": "exists",
+            "basis": "Tests Choice completion; no data-flow connection to changed usage-message formatting was established."
+          }
         }
       },
       "review_counts": {
@@ -866,7 +1038,7 @@
   ],
   "summary_meta": {
     "model": "hand-authored",
-    "note": "Neutral TL;DR from review text only (blinding-safe), identifiers preserved; v3 convention. Reworded 2026-07-13 into plainer language for raters unfamiliar with the repos/Python (same points, same identifiers, arm-symmetric edits). 2026-08-01 amendment: opening verbs varied and bullets ordered by position in the review body (order_bullets), removing the per-arm signature pattern (kg always led with 'Names', baseline with 'Warns')."
+    "note": "Summary of review claims from review text only (not researcher-verified facts; blinding-safe), identifiers preserved; v3 convention. Reworded 2026-07-13 into plainer language for raters unfamiliar with the repos/Python (same points, same identifiers, arm-symmetric edits). 2026-08-01 amendment: opening verbs varied and bullets ordered by position in the review body (order_bullets), removing the per-arm signature pattern (kg always led with 'Names', baseline with 'Warns')."
   },
   "pr_context_meta": {
     "method": "hand-written from PR title/body/diff only (never from a review) \u2014 arm-neutral, blinding-safe",
@@ -877,12 +1049,17 @@
     "note": "Hand-curated 2026-07-06 (Chris spec, same as final v3): a phrase is a marker only if the point/identifier is absent from the other review; paraphrases of shared points stay unshaded."
   },
   "answer_key_meta": {
-    "method": "build_answer_key.py \u2014 AST import resolution at PR head SHA",
+    "method": "build_answer_key.py \u2014 existence check plus source-audited relationship classification at PR head SHA",
+    "warning": "Relationship evidence does not validate the review's risk or consequence claim.",
     "legend": {
-      "in_diff": "file is part of the PR's changed files",
-      "verified": "exists in repo AND imports/mentions the changed modules",
-      "exists": "exists in repo, no detected connection to the change",
-      "not_found": "no such file in the repo (hallucination)"
+      "changed": "file is part of the PR's changed files",
+      "direct": "direct runtime use/call of the changed symbol",
+      "indirect": "indirect execution or public-entry path",
+      "related": "participates in a related data flow",
+      "module_only": "module import only; behavioral relevance unestablished",
+      "type_only": "type-only reference; behavioral relevance unestablished",
+      "exists": "file exists; connection unestablished",
+      "not_found": "no such file found at the pinned commit"
     }
   },
   "count_meta": {

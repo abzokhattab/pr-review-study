@@ -135,14 +135,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .rcount-chip.zero{opacity:.45}.rcount-chip.zero b{color:var(--t3)}
 .rverify{margin-bottom:12px;border:1px solid var(--brd);border-radius:8px;padding:8px 10px;background:var(--bg2)}
 .rverify-label{font-size:.66rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin-bottom:6px;display:flex;align-items:center;gap:5px}
-.rverify-label::before{content:"\2713";font-weight:900;color:var(--t3)}
-.rverify-chips{display:flex;flex-wrap:wrap;gap:6px}
-.rverify-chip{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-family:monospace;border-radius:20px;padding:2px 9px;cursor:default;border:1px solid var(--brd);background:var(--bg1);color:var(--t2)}
-.rverify-chip::after{font-family:-apple-system,sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.4px;text-transform:uppercase}
-.rverify-chip.v-in_diff{border-color:rgba(88,166,255,.5)}.rverify-chip.v-in_diff::after{content:"in diff";color:#58a6ff}
-.rverify-chip.v-verified{border-color:rgba(63,185,80,.5)}.rverify-chip.v-verified::after{content:"verified";color:#3fb950}
-.rverify-chip.v-exists{border-color:rgba(210,153,34,.5)}.rverify-chip.v-exists::after{content:"exists, link unverified";color:#d29922}
-.rverify-chip.v-not_found{border-color:rgba(248,81,73,.6)}.rverify-chip.v-not_found::after{content:"not found";color:#f85149}
+.rverify-label::before{content:"i";font-weight:900;color:var(--t3);border:1px solid var(--t3);border-radius:50%;width:13px;height:13px;display:inline-flex;align-items:center;justify-content:center;font-size:.58rem;text-transform:none}
+.rverify-note{font-size:.7rem;color:var(--t3);line-height:1.35;margin-bottom:7px}
+.rverify-items{display:flex;flex-direction:column;gap:5px}
+.rverify-item{border:1px solid var(--brd);border-radius:6px;background:var(--bg1);overflow:hidden}
+.rverify-item summary{display:flex;align-items:center;gap:7px;padding:5px 7px;cursor:pointer;list-style:none}
+.rverify-item summary::-webkit-details-marker{display:none}
+.rverify-item summary::before{content:"+";color:var(--t3);font-family:monospace;font-weight:800}
+.rverify-item[open] summary::before{content:"\2212"}
+.rverify-path{font-family:monospace;font-size:.7rem;color:var(--t2);overflow-wrap:anywhere}
+.rverify-kind{margin-left:auto;font-size:.58rem;font-weight:800;letter-spacing:.35px;text-transform:uppercase;color:var(--t3);white-space:nowrap;border:1px solid var(--brd);border-radius:10px;padding:1px 6px}
+.rverify-basis{font-size:.7rem;color:var(--t2);line-height:1.4;padding:6px 9px 7px 24px;border-top:1px solid var(--brd)}
+.rverify-item.v-changed .rverify-kind,.rverify-item.v-direct .rverify-kind{color:var(--blue)}
+.rverify-item.v-module_only .rverify-kind,.rverify-item.v-type_only .rverify-kind,.rverify-item.v-exists .rverify-kind{color:var(--orange)}
+.rverify-item.v-not_found{border-color:rgba(248,81,73,.55)}.rverify-item.v-not_found .rverify-kind{color:var(--red)}
 .rcontent{font-size:.83rem;line-height:1.5}
 .rcontent h1,.rcontent h2,.rcontent h3{margin-top:10px;margin-bottom:3px;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding-top:6px;border-top:1px solid var(--bg3)}
 .rcontent h1:first-child,.rcontent h2:first-child,.rcontent h3:first-child{margin-top:0;padding-top:0;border-top:none}
@@ -156,9 +162,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 /* unique-sentence highlighting */
 .rcontent .uniq-A{background:rgba(88,166,255,0.16);border-left:3px solid #58a6ff;padding-left:6px;margin-left:-9px;border-radius:2px}
 .rcontent .uniq-B{background:rgba(163,113,247,0.16);border-left:3px solid #a371f7;padding-left:6px;margin-left:-9px;border-radius:2px}
-#diffLegend{display:flex;gap:14px;align-items:center;font-size:.78rem;color:var(--t2);margin:6px 0 8px;flex-wrap:wrap}
-#diffLegend .swatch{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:5px;vertical-align:middle}
-#diffLegend .toggle-uniq{margin-left:auto;cursor:pointer;color:var(--t2);text-decoration:underline;font-size:.78rem;background:none;border:none;padding:0}
+#diffLegend,#warmDiffLegend{display:flex;gap:14px;align-items:center;font-size:.78rem;color:var(--t2);margin:6px 0 8px;flex-wrap:wrap}
+#diffLegend .swatch,#warmDiffLegend .swatch{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:5px;vertical-align:middle}
+#diffLegend .toggle-uniq,#warmDiffLegend .toggle-uniq{margin-left:auto;cursor:pointer;color:var(--t2);text-decoration:underline;font-size:.78rem;background:none;border:none;padding:0}
 .diff-hidden .uniq-A,.diff-hidden .uniq-B{background:transparent;border-left:0;padding-left:0;margin-left:0}
 
 /* ── 5-point Preference Scale ── */
@@ -273,6 +279,10 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
 #bodyC .md-code{background:var(--bg2);border:1px solid var(--bg3);border-radius:3px;padding:.5px 4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.84em;color:var(--t1)}
 #bodyC .md-pre{margin:.55em 0;padding:8px 10px;background:var(--bg2);border:1px solid var(--bg3);border-radius:4px;overflow-x:auto;font-size:.82em;line-height:1.4}
 #bodyC .md-img{display:inline-block;padding:1px 6px;margin:0 2px;background:var(--bg2);border:1px solid var(--bg3);border-radius:3px;font-size:.78em;color:var(--t2);font-style:italic}
+/* Practice mirrors the final instrument: summaries + badges are visible,
+   counts are omitted, and semantic highlighting starts off. */
+#warmup .rcounts{display:none!important}
+#warmup:not(.highlights-on) .uniq-A,#warmup:not(.highlights-on) .uniq-B{background:transparent!important;border-left:0!important;padding-left:0!important;margin-left:0!important}
 </style>
 </head>
 <body>
@@ -285,9 +295,9 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
   <p class="sub">Human evaluation of AI-generated code review comments &mdash; HPI Master's Thesis</p>
   <div class="wcard">
     <p>You will read <strong>6 Pull Requests</strong> from real open-source projects and compare two AI-generated reviews for each.</p>
-    <p style="color:var(--t3);font-size:.85rem;margin-bottom:16px">Takes approximately 15&ndash;25 minutes. Progress is saved automatically &mdash; you can take breaks.</p>
+    <p style="color:var(--t3);font-size:.85rem;margin-bottom:16px">Takes approximately 15&ndash;25 minutes. Progress is saved on this device &mdash; you can take breaks.</p>
     <div class="igroup">
-      <input type="text" id="raterInput" placeholder="Enter your name or rater ID" autocomplete="off" />
+      <input type="text" id="raterInput" placeholder="Participant code or unique alias — do not enter your real name" autocomplete="off" />
       <button class="btn btn-p" id="startBtn" disabled>Start</button>
     </div>
     <p id="resumeNote"></p>
@@ -299,16 +309,16 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
   <div class="consent-card">
     <h2>Informed Consent</h2>
     <p>You are being invited to participate in a research study on AI-assisted code review quality, conducted as part of a Master's thesis at the Hasso Plattner Institute, University of Potsdam.</p>
-    <p><strong>What you will do:</strong> For each of 6 Pull Requests, you will read the code diff and two AI-generated reviews side by side, then judge which review is more useful. The study takes approximately 15&ndash;25 minutes.</p>
+    <p><strong>What you will do:</strong> For each of 6 Pull Requests, you will read a plain-language description and two AI-generated reviews side by side, then judge which review is more useful. The code diff is available as an optional reference. The study takes approximately 15&ndash;25 minutes.</p>
     <p><strong>Data collected:</strong></p>
     <ul>
-      <li>A rater ID that you choose freely (not linked to your real name)</li>
+      <li>A participant code or unique alias (do not enter your real name)</li>
       <li>Background information: role, programming experience, PR review frequency</li>
-      <li>Your preference judgment and brief reasoning for each PR pair</li>
+      <li>Your preference judgments and, if you choose to provide it, brief reasoning</li>
       <li>Time spent per comparison</li>
       <li>Optional open-ended feedback at the end</li>
     </ul>
-    <p><strong>No personally identifiable data</strong> (name, email, IP address) is collected or stored. All data is used solely for academic research.</p>
+    <p>The study form does not ask for your name, email address, or IP address. Please use only a participant code or alias. Study responses are used solely for academic research.</p>
     <p><strong>Participation is voluntary.</strong> You may quit at any time. Contact: <a href="mailto:Abdelrahman.Khattab@student.hpi.uni-potsdam.de" style="color:var(--blue)">Abdelrahman Khattab</a> &mdash; Hasso Plattner Institute.</p>
     <div class="consent-check">
       <input type="checkbox" id="consentBox" />
@@ -371,7 +381,7 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
     <p>For each of <strong>6 real Pull Requests</strong> from open-source projects, you will:</p>
     <ol>
       <li><strong>Read the PR context</strong> &mdash; every PR starts with a short plain-language box explaining what the project is and what the change does (no knowledge of the project or of Python is needed). The code diff is available below it but <strong>collapsed by default</strong> &mdash; expand it only if you want to check a detail; the plain-language box gives you the intent.</li>
-      <li><strong>Read both AI-generated reviews</strong> side by side &mdash; <strong style="color:#58a6ff">Review A</strong> and <strong style="color:#a371f7">Review B</strong>. You won't know which AI strategy produced which review. Each review starts with a short <em>summary</em> to help you orient quickly &mdash; it's just a reading aid; please base your judgement on the <strong>full review</strong> below it.</li>
+      <li><strong>Read both AI-generated reviews</strong> side by side &mdash; <strong style="color:#58a6ff">Review A</strong> and <strong style="color:#a371f7">Review B</strong>. You won't know which AI strategy produced which review. Judge only what each review actually says.</li>
       <li><strong>Judge each review on 6 criteria</strong> &mdash; for every criterion, mark whether <strong style="color:#58a6ff">Review A</strong> does it better, <strong style="color:#a371f7">Review B</strong> does it better, <strong style="color:#3fb950">Both</strong> address it about equally, or <strong>Neither</strong> addresses it.</li>
       <li><strong>Give one overall preference</strong> &mdash; after the 6 criteria, make a single holistic call: which review is more useful overall (or about the same).</li>
       <li><strong>Briefly explain why</strong> in a text box (optional &mdash; one sentence is enough).</li>
@@ -396,15 +406,8 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
     </table>
     <p style="color:var(--t3);font-size:.88rem">You do <em>not</em> need deep knowledge of the codebase. Judge the review text itself: is it specific and grounded in the diff, or vague and generic?</p>
 
-    <h3>Three reading aids we pre-computed for you</h3>
-    <p><strong>1. Highlighted differences.</strong> Sentences highlighted in <span style="background:rgba(88,166,255,0.16);border-left:3px solid #58a6ff;padding:1px 6px;border-radius:2px;font-size:.85rem">blue</span> are unique to Review A; <span style="background:rgba(163,113,247,0.16);border-left:3px solid #a371f7;padding:1px 6px;border-radius:2px;font-size:.85rem">purple</span> are unique to Review B. Unshaded text is roughly the same point in both. This lets you focus on what actually <em>differs</em> rather than re-reading overlap.</p>
-    <p><strong>2. A concrete-item count strip</strong> sits on top of each review. We automatically counted the concrete things each review names &mdash; <strong>Components/APIs</strong>, <strong>Files</strong>, <strong>Test targets</strong>, <strong>Edge cases</strong>, and <strong>Reasoned claims</strong> (a suggestion with an explicit "X could cause Y"). <em>Hover any chip to see exactly which items were counted.</em> A higher count is <em>not automatically better</em> &mdash; it just shows how much concrete substance each review has. Your job is to judge whether the difference actually <strong>matters</strong> for this PR.</p>
-    <p><strong>3. A file-reference check.</strong> Every file a review mentions was checked against the real repository at the PR's commit, so you don't have to trust (or look up) any file name yourself. Each reference gets a badge:
-      <span class="rverify-chip v-in_diff" style="margin:0 2px">file.py</span> the file is part of the PR's changed files;
-      <span class="rverify-chip v-verified" style="margin:0 2px">file.py</span> the file exists <em>and</em> genuinely imports/uses the changed code;
-      <span class="rverify-chip v-exists" style="margin:0 2px">file.py</span> the file exists but we found no direct connection to the change;
-      <span class="rverify-chip v-not_found" style="margin:0 2px">file.py</span> no such file exists &mdash; the review invented it.
-      <em>Hover any badge for its meaning.</em> Two cautions: a <em>verified</em> badge confirms the file is real and connected &mdash; it does not confirm every claim the review makes <em>about</em> that file. And a review that names <em>more</em> files is not automatically better &mdash; judge whether what it names actually matters for this PR.</p>
+    <h3>Reading aids</h3>
+    <p>Each review begins with a short summary of what that review claims. Repository evidence labels show whether a referenced file is changed in the PR, directly used, indirectly connected, merely imported, simply exists, or was not found. Select a file to see the basis. These labels <strong>do not prove that the review's risk or consequence claim is correct</strong>. You can optionally turn on highlighting to locate text unique to each review. Highlighting starts off, and naming more files is not automatically better.</p>
 
     <h3>Using the diff (optional)</h3>
     <p>The diff shows exactly what code changed. It is collapsed by default &mdash; you can judge the reviews without it. Expand it when you want to check whether a review describes a real risk in the changed code or a hypothetical one.</p>
@@ -504,12 +507,17 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
   <div class="comparison-grid">
     <div class="review-card">
       <div class="review-card-header"><span style="width:24px;height:24px;border-radius:6px;background:#58a6ff;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff">A</span><span style="color:#58a6ff">Review A</span></div>
-      <div class="review-card-body"><div class="rsummary"><div class="rsummary-label">Summary &mdash; orientation only</div><ul><li>Flags that the retry loop has <strong>no backoff</strong> between attempts, risking a burst of requests on transient failures.</li><li>Recommends <strong>exponential backoff</strong> and a test in <code>tests/test_api_client.py</code> for the exhausted-retries case.</li></ul></div><div class="rcounts"><div class="rcounts-label">Concrete items named (auto-counted &mdash; hover to see them)</div><div class="rcounts-chips"><span class="rcount-chip" title="Components/APIs:&#10;• ApiClient.fetch()&#10;• RequestException">Components/APIs <b>2</b></span><span class="rcount-chip" title="Files:&#10;• tests/test_api_client.py">Files <b>1</b></span><span class="rcount-chip" title="Test targets:&#10;• tests/test_api_client.py&#10;• exhausted-retries case">Test targets <b>2</b></span><span class="rcount-chip" title="Edge cases:&#10;• transient failure / rate limiting">Edge cases <b>1</b></span><span class="rcount-chip" title="Reasoned claims:&#10;• no backoff could overwhelm the server">Reasoned claims <b>1</b></span></div></div><div class="rverify"><div class="rverify-label">File references &mdash; checked against the repository (hover for meaning)</div><div class="rverify-chips"><span class="rverify-chip v-verified" title="This file exists in the repository AND genuinely imports/uses the changed code — the reference is real.">tests/test_api_client.py</span></div></div><div class="rcontent"><h2>Problems found</h2><p>The <code>fetch()</code> retry loop has <span class="uniq-A">no backoff between attempts</span>, so a transient failure turns into a tight burst of requests against the upstream service.</p><h2>Files and lines referenced</h2><p><code>ApiClient.fetch()</code>: <span class="uniq-A">the retry loop catches all <code>RequestException</code> subtypes including <code>ConnectionError</code> and <code>Timeout</code>, with no delay between attempts.</span></p><h2>What could go wrong</h2><p>Without backoff, rapid repeated requests could overwhelm the server or trigger rate limiting under transient failures.</p><h2>Suggestions</h2><p><span class="uniq-A">Add exponential backoff (e.g. <code>time.sleep(2 ** attempt)</code>) between retries. Add tests in <code>tests/test_api_client.py</code> covering the exhausted-retries case.</span></p></div></div>
+      <div class="review-card-body"><div class="rsummary"><div class="rsummary-label">Summary of this review's claims &mdash; not verified facts</div><ul><li>Flags that the retry loop has <strong>no backoff</strong> between attempts, risking a burst of requests on transient failures.</li><li>Recommends <strong>exponential backoff</strong> and a test in <code>tests/test_api_client.py</code> for the exhausted-retries case.</li></ul></div><div class="rcounts"><div class="rcounts-label">Concrete items named (auto-counted &mdash; hover to see them)</div><div class="rcounts-chips"><span class="rcount-chip" title="Components/APIs:&#10;• ApiClient.fetch()&#10;• RequestException">Components/APIs <b>2</b></span><span class="rcount-chip" title="Files:&#10;• tests/test_api_client.py">Files <b>1</b></span><span class="rcount-chip" title="Test targets:&#10;• tests/test_api_client.py&#10;• exhausted-retries case">Test targets <b>2</b></span><span class="rcount-chip" title="Edge cases:&#10;• transient failure / rate limiting">Edge cases <b>1</b></span><span class="rcount-chip" title="Reasoned claims:&#10;• no backoff could overwhelm the server">Reasoned claims <b>1</b></span></div></div><div class="rverify"><div class="rverify-label">Repository reference evidence</div><div class="rverify-note">Confirms that the file exists in this example; it does not prove the review's risk claim.</div><div class="rverify-items"><details class="rverify-item v-exists"><summary><span class="rverify-path">tests/test_api_client.py</span><span class="rverify-kind">exists; link unknown</span></summary><div class="rverify-basis">The file exists in the example repository; no further relationship is asserted for practice.</div></details></div></div><div class="rcontent"><h2>Problems found</h2><p>The <code>fetch()</code> retry loop has <span class="uniq-A">no backoff between attempts</span>, so a transient failure turns into a tight burst of requests against the upstream service.</p><h2>Files and lines referenced</h2><p><code>ApiClient.fetch()</code>: <span class="uniq-A">the retry loop catches all <code>RequestException</code> subtypes including <code>ConnectionError</code> and <code>Timeout</code>, with no delay between attempts.</span></p><h2>What could go wrong</h2><p>Without backoff, rapid repeated requests could overwhelm the server or trigger rate limiting under transient failures.</p><h2>Suggestions</h2><p><span class="uniq-A">Add exponential backoff (e.g. <code>time.sleep(2 ** attempt)</code>) between retries. Add tests in <code>tests/test_api_client.py</code> covering the exhausted-retries case.</span></p></div></div>
     </div>
     <div class="review-card">
       <div class="review-card-header"><span style="width:24px;height:24px;border-radius:6px;background:#a371f7;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff">B</span><span style="color:#a371f7">Review B</span></div>
-      <div class="review-card-body"><div class="rsummary"><div class="rsummary-label">Summary &mdash; orientation only</div><ul><li>Says the retry logic <em>may not be robust enough</em>, but doesn't pinpoint why.</li><li>Suggests adding error handling and tests in general terms, without naming files or cases.</li></ul></div><div class="rcounts"><div class="rcounts-label">Concrete items named (auto-counted &mdash; hover to see them)</div><div class="rcounts-chips"><span class="rcount-chip" title="Components/APIs:&#10;• fetch()">Components/APIs <b>1</b></span><span class="rcount-chip zero" title="Files:&#10;none">Files <b>0</b></span><span class="rcount-chip zero" title="Test targets:&#10;none">Test targets <b>0</b></span><span class="rcount-chip zero" title="Edge cases:&#10;none">Edge cases <b>0</b></span><span class="rcount-chip zero" title="Reasoned claims:&#10;none">Reasoned claims <b>0</b></span></div></div><div class="rcontent"><h2>Problems found</h2><p>The retry logic in <code>fetch()</code> may not handle failures robustly enough.</p><h2>Files and lines referenced</h2><p><code>fetch()</code> method retry loop.</p><h2>What could go wrong</h2><p>The retry mechanism looks reasonable but could be improved.</p><h2>Suggestions</h2><p>Consider adding some error handling and tests. <span class="uniq-B">The code should also follow best practices for retry logic.</span></p></div></div>
+      <div class="review-card-body"><div class="rsummary"><div class="rsummary-label">Summary of this review's claims &mdash; not verified facts</div><ul><li>Says the retry logic <em>may not be robust enough</em>, but doesn't pinpoint why.</li><li>Suggests adding error handling and tests in general terms, without naming files or cases.</li></ul></div><div class="rcounts"><div class="rcounts-label">Concrete items named (auto-counted &mdash; hover to see them)</div><div class="rcounts-chips"><span class="rcount-chip" title="Components/APIs:&#10;• fetch()">Components/APIs <b>1</b></span><span class="rcount-chip zero" title="Files:&#10;none">Files <b>0</b></span><span class="rcount-chip zero" title="Test targets:&#10;none">Test targets <b>0</b></span><span class="rcount-chip zero" title="Edge cases:&#10;none">Edge cases <b>0</b></span><span class="rcount-chip zero" title="Reasoned claims:&#10;none">Reasoned claims <b>0</b></span></div></div><div class="rcontent"><h2>Problems found</h2><p>The retry logic in <code>fetch()</code> may not handle failures robustly enough.</p><h2>Files and lines referenced</h2><p><code>fetch()</code> method retry loop.</p><h2>What could go wrong</h2><p>The retry mechanism looks reasonable but could be improved.</p><h2>Suggestions</h2><p>Consider adding some error handling and tests. <span class="uniq-B">The code should also follow best practices for retry logic.</span></p></div></div>
     </div>
+  </div>
+  <div id="warmDiffLegend">
+    <span><span class="swatch" style="background:rgba(88,166,255,0.16);border-left:3px solid #58a6ff"></span>unique to Review A</span>
+    <span><span class="swatch" style="background:rgba(163,113,247,0.16);border-left:3px solid #a371f7"></span>unique to Review B</span>
+    <button class="toggle-uniq" id="warmToggleUniqBtn" type="button">show highlighted differences</button>
   </div>
 
   <div class="pref5-section">
@@ -589,20 +597,19 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
     <div class="diff-view" id="diffC"></div>
   </div>
 
+  <div class="comparison-grid" id="reviewGrid"></div>
   <div id="diffLegend">
     <span><span class="swatch" style="background:rgba(88,166,255,0.16);border-left:3px solid #58a6ff"></span>unique to Review A</span>
     <span><span class="swatch" style="background:rgba(163,113,247,0.16);border-left:3px solid #a371f7"></span>unique to Review B</span>
-    <span style="color:var(--t3)">unshaded = roughly the same point in both</span>
-    <button class="toggle-uniq" id="toggleUniqBtn" type="button">hide highlighting</button>
+    <span style="color:var(--t3)">optional &mdash; highlighting starts off</span>
+    <button class="toggle-uniq" id="toggleUniqBtn" type="button">show highlighted differences</button>
   </div>
-
-  <div class="comparison-grid" id="reviewGrid"></div>
 
   <button class="jump-btn" id="jumpBtn">&#8595; Jump to Questions</button>
 
   <div class="pref5-section" id="pref5Section">
     <h4>For each criterion, which review better addresses it?</h4>
-    <p class="pref5-sub">Don't pick an overall winner. For each criterion below, choose: <strong style="color:#58a6ff">Review A</strong> does it better, <strong style="color:#a371f7">Review B</strong> does it better, <strong style="color:#3fb950">Both</strong> address it about equally, or <strong>Neither</strong> addresses it. The highlighting and badges are reading aids only &mdash; naming more files or items is <strong>not automatically better</strong>. What counts is whether what a review says actually <strong>matters</strong> for this PR.</p>
+    <p class="pref5-sub">Don't pick an overall winner. For each criterion below, choose: <strong style="color:#58a6ff">Review A</strong> does it better, <strong style="color:#a371f7">Review B</strong> does it better, <strong style="color:#3fb950">Both</strong> address it about equally, or <strong>Neither</strong> addresses it. Naming more files or items is <strong>not automatically better</strong>; judge whether what a review says actually matters for this PR.</p>
     <div class="crit-grid" id="critGrid"></div>
   </div>
 
@@ -656,10 +663,10 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
     <div class="scard"><div class="sl">Total Time</div><div class="sv" id="stT">--</div></div>
     <div class="scard"><div class="sl">Avg / PR</div><div class="sv" id="stA">--</div></div>
   </div>
-  <p style="color:var(--t2)">Your responses have been saved automatically.</p>
+  <p style="color:var(--t2)">Your responses are saved on this device, and submission to the research endpoint was attempted.</p>
   <div id="exportBackup" style="margin-top:14px;padding:14px;border:1px solid var(--brd);border-radius:10px;max-width:560px;margin-left:auto;margin-right:auto;background:var(--bg1)">
     <p style="font-size:.9rem;color:var(--t1);margin:0 0 8px"><strong>Backup copy</strong></p>
-    <p style="font-size:.85rem;color:var(--t2);margin:0 0 10px">If the researcher asked you to email your responses, click below to download them as a JSON file.</p>
+    <p style="font-size:.85rem;color:var(--t2);margin:0 0 10px">Because this page cannot independently confirm server receipt, please download this backup and keep it until the researcher confirms receipt.</p>
     <button id="downloadBackupBtn" class="btn btn-s" style="font-size:.9rem">Download my responses (.json)</button>
   </div>
 </div>
@@ -668,17 +675,19 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
 
 <script>
 /* ═══════════════════════════════════════════════════════
-   Human Evaluation Study — Python-PR pilot
+   Human Evaluation Study — Python PRs
    - 6 PRs from small familiar Python repos (requests, flask, click)
-   - baseline_strict vs kg pairs + per-review file-reference answer key
+   - baseline_strict vs kg pairs with claim summaries, neutral repository
+     evidence labels, and
+     optional highlighting; criterion-mapped count strip omitted
    - Order randomized per rater (seeded shuffle)
    - Single comparison per PR: baseline vs KG (blind A/B)
    - Task: per-criterion relevance (Review A / Both / Neither / Review B
      on each of 6 criteria) + why text + difficulty
-   - Validates LLM-judge per-criterion ranking against human judgement
+   - Tests whether humans perceive the KG review's affected-code grounding
    ═══════════════════════════════════════════════════════ */
 
-const STUDY_ID = "human_eval_pilot_py_v1";
+const STUDY_ID = "human_eval_v4_python_20260808";
 let STUDY = null;
 
 async function loadStudy() {
@@ -688,8 +697,10 @@ async function loadStudy() {
 }
 
 let raterId = "", taskOrder = [], modeMap = {}, ratings = {},
-    curTask = 0, taskMs = 0, timerH = null, startedAt = null,
-    demographics = {}, githubClickLog = {}, submittedSig = {};
+    curTask = 0, taskMs = 0, taskStartedAt = 0, taskBaseMs = 0,
+    timerH = null, startedAt = null,
+    demographics = {}, githubClickLog = {}, highlightUseLog = {},
+    submittedSig = {};
 
 // A rating counts as finished once the mandatory fields are present
 // (criteria, preference, difficulty). The "why" rationale became optional
@@ -740,19 +751,26 @@ function buildOrder() {
 }
 
 /* ═══ Storage ═══ */
-function sKey() { return "hevalpy1_" + raterId; }
+function storageKey(id) { return "heval_" + STUDY_ID + "_" + id; }
+function sKey() { return storageKey(raterId); }
 function save() {
   localStorage.setItem(sKey(), JSON.stringify({
-    raterId, startedAt, curTask, ratings, modeMap, taskOrder, demographics, githubClickLog, submittedSig
+    studyId: STUDY_ID, instrumentVersion: STUDY.version,
+    raterId, startedAt, curTask, ratings, modeMap, taskOrder, demographics,
+    githubClickLog, highlightUseLog, submittedSig
   }));
 }
 function load() {
   try {
     const d = JSON.parse(localStorage.getItem(sKey()));
-    if (d && d.taskOrder && d.ratings) {
+    if (d && d.studyId === STUDY_ID
+          && d.instrumentVersion === STUDY.version
+          && d.taskOrder && d.ratings) {
       taskOrder=d.taskOrder; ratings=d.ratings; modeMap=d.modeMap;
       startedAt=d.startedAt; demographics=d.demographics||{};
-      githubClickLog=d.githubClickLog||{}; submittedSig=d.submittedSig||{};
+      githubClickLog=d.githubClickLog||{};
+      highlightUseLog=d.highlightUseLog||{};
+      submittedSig=d.submittedSig||{};
       curTask=firstOpen();
       return true;
     }
@@ -907,9 +925,6 @@ function buildReviewPair(pr, taskId) {
   grid.innerHTML = "";
   const asgn = modeMap[taskId];
   const rawHtml = { A: md(pr.reviews[asgn.A]), B: md(pr.reviews[asgn.B]) };
-  // Highlighting: prefer curated semantic unique-content markers (Chris spec —
-  // paraphrases of shared points stay unshaded); fall back to the lexical
-  // heuristic only if a PR has no curated markers.
   const uniq = pr.review_unique || null;
   let shadedA, shadedB;
   if (uniq) {
@@ -919,18 +934,19 @@ function buildReviewPair(pr, taskId) {
     [shadedA, shadedB] = shadeUniqueBlocks(rawHtml.A, rawHtml.B);
   }
   const summaries = pr.review_summaries || {};
-  const counts = pr.review_counts || {};
   ["A","B"].forEach(lbl => {
     const color = lbl==="A" ? "#58a6ff" : "#a371f7";
     const card = document.createElement("div");
     card.className = "review-card";
     const summ = summaries[asgn[lbl]] || [];
     const summHtml = summ.length
-      ? `<div class="rsummary"><div class="rsummary-label">Summary &mdash; orientation only</div><ul>${summ.map(b=>`<li>${mdInline(b)}</li>`).join("")}</ul></div>`
+      ? `<div class="rsummary"><div class="rsummary-label">Summary of this review's claims &mdash; not verified facts</div><ul>${summ.map(b=>`<li>${mdInline(b)}</li>`).join("")}</ul></div>`
       : "";
-    const countHtml = buildCountStrip(counts[asgn[lbl]]);
     const verifyHtml = buildVerifyStrip((pr.answer_key || {})[asgn[lbl]]);
-    card.innerHTML = `<div class="review-card-header"><span style="width:24px;height:24px;border-radius:6px;background:${color};display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;flex-shrink:0">${lbl}</span><span style="color:${color}">Review ${lbl}</span></div><div class="review-card-body">${summHtml}${countHtml}${verifyHtml}<div class="rcontent">${lbl==="A"?shadedA:shadedB}</div></div>`;
+    const reviewHtml = lbl==="A" ? shadedA : shadedB;
+    // Deliberately no count strip: its Components/APIs and Files values map
+    // too directly to the primary F3* outcome.
+    card.innerHTML = `<div class="review-card-header"><span style="width:24px;height:24px;border-radius:6px;background:${color};display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;flex-shrink:0">${lbl}</span><span style="color:${color}">Review ${lbl}</span></div><div class="review-card-body">${summHtml}${verifyHtml}<div class="rcontent">${reviewHtml}</div></div>`;
     grid.appendChild(card);
   });
 }
@@ -958,25 +974,40 @@ function buildCountStrip(c) {
   return `<div class="rcounts"><div class="rcounts-label">Concrete items named (auto-counted &mdash; hover to see them)</div><div class="rcounts-chips">${chips}</div></div>`;
 }
 
-/* ═══ File-reference answer key (precomputed offline against the repo at the
-   PR's commit — see answer_key_meta in study_data.json). Blinding-safe: the
-   same mechanical check ran on both reviews; verdicts depend only on the
-   review text, never on the mode label. ═══ */
-const VERIFY_TIPS = {
-  in_diff:  "This file is one of the files the PR itself changes.",
-  verified: "This file exists in the repository AND genuinely imports/uses the changed code — the reference is real.",
-  exists:   "This file exists in the repository, but no direct connection to the changed code was detected.",
-  not_found:"No such file exists in the repository — the review invented this reference.",
+/* ═══ File-reference evidence (precomputed offline at the PR commit).
+   These facts describe repository relationships only. They never certify a
+   review's predicted consequence or say that a named file is affected. ═══ */
+const RELATION_LABELS = {
+  changed: "changed in PR",
+  direct: "direct use",
+  indirect: "indirect path",
+  related: "related data flow",
+  module_only: "module import only",
+  type_only: "type-only reference",
+  exists: "exists; link unknown",
+  not_found: "not found",
 };
 function buildVerifyStrip(ak) {
   if (!ak || !Object.keys(ak).length) return "";
-  const order = { not_found: 0, verified: 1, exists: 2, in_diff: 3 };
-  const chips = Object.entries(ak)
-    .sort((a, b) => (order[a[1]] ?? 9) - (order[b[1]] ?? 9))
-    .map(([ref, verdict]) =>
-      `<span class="rverify-chip v-${verdict}" title="${_attr(VERIFY_TIPS[verdict] || verdict)}">${_attr(ref)}</span>`)
+  const order = { not_found:0, direct:1, indirect:2, related:3, module_only:4, type_only:5, exists:6, changed:7 };
+  const items = Object.entries(ak)
+    .map(([ref, raw]) => {
+      // Legacy fallback is intentionally conservative for old practice data.
+      const ev = typeof raw === "string"
+        ? {relationship: raw==="in_diff" ? "changed" : raw==="not_found" ? "not_found" : "exists",
+           basis: raw==="in_diff" ? "This file is changed by the PR itself."
+             : raw==="not_found" ? "No such file was found in the repository."
+             : "File exists; no connection to the changed behavior was established."}
+        : raw;
+      return [ref, ev];
+    })
+    .sort((a, b) => (order[a[1].relationship] ?? 9) - (order[b[1].relationship] ?? 9))
+    .map(([ref, ev]) => {
+      const rel = ev.relationship || "exists";
+      return `<details class="rverify-item v-${_attr(rel)}"><summary><span class="rverify-path">${_attr(ref)}</span><span class="rverify-kind">${_attr(RELATION_LABELS[rel] || rel)}</span></summary><div class="rverify-basis">${_attr(ev.basis || "No further relationship evidence recorded.")}</div></details>`;
+    })
     .join("");
-  return `<div class="rverify"><div class="rverify-label">File references &mdash; checked against the repository (hover for meaning)</div><div class="rverify-chips">${chips}</div></div>`;
+  return `<div class="rverify"><div class="rverify-label">Repository reference evidence</div><div class="rverify-note">Confirms whether files exist and describes the observed relationship. It does not prove that the review's risk or consequence claim is correct. Select a file for details.</div><div class="rverify-items">${items}</div></div>`;
 }
 
 /* ═══ Per-criterion relevance (Review A / Both / Neither / Review B for each of 6 criteria) ═══ */
@@ -1107,11 +1138,23 @@ function getDifficulty() {
 
 /* ═══ Timer ═══ */
 function startT() {
-  taskMs=0; clearInterval(timerH);
+  clearInterval(timerH);
+  const task = taskOrder[curTask];
+  taskBaseMs = task && ratings[task.taskId]
+    ? Number(ratings[task.taskId].time_spent_ms || 0) : 0;
+  taskStartedAt = Date.now();
   const el=document.getElementById("timer");
-  timerH=setInterval(()=>{ taskMs+=1000; const s=Math.floor(taskMs/1000); const txt=Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); if(el.textContent!==txt)el.textContent=txt; },1000);
+  const update=()=>{ taskMs=taskBaseMs+(Date.now()-taskStartedAt); const s=Math.floor(taskMs/1000); const txt=Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); if(el.textContent!==txt)el.textContent=txt; };
+  update();
+  timerH=setInterval(update,1000);
 }
-function stopT() { clearInterval(timerH); return taskMs; }
+function stopT() {
+  clearInterval(timerH);
+  taskMs=taskBaseMs+(Date.now()-taskStartedAt);
+  taskBaseMs=taskMs;
+  taskStartedAt=Date.now();
+  return taskMs;
+}
 
 /* ═══ Render task ═══ */
 function render(idx) {
@@ -1142,14 +1185,18 @@ function render(idx) {
 
   buildReviewPair(pr, task.taskId);
 
-  // Wire highlight toggle
+  // Optional semantic highlighting starts off on every trial.
   const toggleBtn = document.getElementById("toggleUniqBtn");
   const grid = document.getElementById("reviewGrid");
-  grid.classList.remove("diff-hidden");
-  toggleBtn.textContent = "hide highlighting";
+  grid.classList.add("diff-hidden");
+  toggleBtn.textContent = "show highlighted differences";
   toggleBtn.onclick = function() {
-    const on = grid.classList.toggle("diff-hidden");
-    toggleBtn.textContent = on ? "show highlighting" : "hide highlighting";
+    const hidden = grid.classList.toggle("diff-hidden");
+    toggleBtn.textContent = hidden ? "show highlighted differences" : "hide highlighted differences";
+    if (!hidden) {
+      highlightUseLog[task.taskId] = true;
+      save();
+    }
   };
 
   clearCrit("critGrid");
@@ -1260,25 +1307,33 @@ function goPrev() {
 /* ═══ Webhook ═══ */
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxh4vSGKrqyt3GiwMXIBPv5AfoB3nhYYMqwU7IRy6SO4xy4qYRDxHo61vIcqaD7hwyScw/exec";
 
-function _outboxKey() { return "heval4_outbox_"+STUDY_ID+"_"+(raterId||"_anon"); }
+function _outboxKey() { return "heval4_outbox_"+STUDY_ID+"_"+STUDY.version+"_"+(raterId||"_anon"); }
 function appendToOutbox(payload) {
   try { const key=_outboxKey(); const cur=JSON.parse(localStorage.getItem(key)||"[]"); cur.push({queued_at:new Date().toISOString(),payload}); localStorage.setItem(key,JSON.stringify(cur)); } catch(e) {}
 }
 function loadOutbox() { try { return JSON.parse(localStorage.getItem(_outboxKey())||"[]"); } catch(e) { return []; } }
 function downloadResponseBackup() {
-  const data={study_id:STUDY_ID,rater_id:raterId,exported_at:new Date().toISOString(),payloads:loadOutbox()};
+  const data={study_id:STUDY_ID,instrument_version:STUDY.version,rater_id:raterId,exported_at:new Date().toISOString(),payloads:loadOutbox()};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a"); a.href=url; a.download=STUDY_ID+"_"+(raterId||"anon")+"_"+new Date().toISOString().replace(/[:.]/g,"-")+".json";
   document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 }
-function sendToSheet(payload, retries=3) {
-  appendToOutbox(payload);
+function postPayload(payload, retries=3) {
   function attempt(n) {
     try { fetch(SHEET_URL,{method:"POST",body:JSON.stringify(payload),mode:"no-cors"}).catch(()=>{if(n>1)setTimeout(()=>attempt(n-1),2000*(4-n))}); }
     catch(e) { if(n>1) setTimeout(()=>attempt(n-1),2000*(4-n)); }
   }
   attempt(retries);
+}
+function sendToSheet(payload, retries=3) {
+  appendToOutbox(payload);
+  postPayload(payload,retries);
+}
+function replayOutbox() {
+  loadOutbox().forEach(item => {
+    if(item && item.payload) postPayload(item.payload,1);
+  });
 }
 function submitTaskToSheet(taskId) {
   const r = ratings[taskId]; if (!r) return;
@@ -1292,11 +1347,14 @@ function submitTaskToSheet(taskId) {
   // comparison). We only resend when the answer actually changed; the
   // analysis should still dedupe by (rater_id, pr_id, comparison),
   // keeping the latest, in case a genuine edit produces two rows.
-  const sig = JSON.stringify([r.criteria, r.overall, r.why, r.difficulty]);
+  const sig = JSON.stringify([r.criteria, r.overall, r.why, r.difficulty,
+                              r.time_spent_ms, r.github_clicks,
+                              !!highlightUseLog[taskId]]);
   if (submittedSig[taskId] === sig) return;
   submittedSig[taskId] = sig;
   const payload = {
     study_id: STUDY_ID,
+    instrument_version: STUDY.version,
     rater_id: raterId,
     completed_at: new Date().toISOString(),
     demographics: demographics,
@@ -1312,6 +1370,7 @@ function submitTaskToSheet(taskId) {
       difficulty: r.difficulty,
       time_spent_ms: r.time_spent_ms,
       github_clicks: r.github_clicks,
+      highlight_used: !!highlightUseLog[taskId],
     }]
   };
   sendToSheet(payload);
@@ -1319,7 +1378,7 @@ function submitTaskToSheet(taskId) {
 }
 function submitFeedbackToSheet(text) {
   if (!text) return;
-  sendToSheet({study_id:STUDY_ID,rater_id:raterId,completed_at:new Date().toISOString(),feedback:text});
+  sendToSheet({study_id:STUDY_ID,instrument_version:STUDY.version,rater_id:raterId,completed_at:new Date().toISOString(),feedback:text});
 }
 
 /* ═══ Feedback & completion ═══ */
@@ -1385,11 +1444,19 @@ function warmupComplete() {
 }
 function showWarmup() {
   showScreen("warmup");
+  const warm = document.getElementById("warmup");
+  const highlightBtn = document.getElementById("warmToggleUniqBtn");
+  warm.classList.remove("highlights-on");
+  highlightBtn.textContent = "show highlighted differences";
+  highlightBtn.onclick = () => {
+    const on = warm.classList.toggle("highlights-on");
+    highlightBtn.textContent = on ? "hide highlighted differences" : "show highlighted differences";
+  };
   buildCritGrid("warmCritGrid", "warm");
   wireOverall("warm");
   const btn=document.getElementById("warmDoneBtn"); btn.disabled=true;
   const refresh=()=>{btn.disabled=!warmupComplete()};
-  document.getElementById("warmup").addEventListener("click",refresh);
+  warm.addEventListener("click",refresh);
   btn.onclick=()=>{if(warmupComplete())beginEval()};
 }
 function beginEval() {
@@ -1411,8 +1478,8 @@ async function init() {
     const v=inp.value.trim(); btn.disabled=!v;
     if(v){
       try {
-        const d=JSON.parse(localStorage.getItem("hevalpy1_"+v));
-        if(d&&d.ratings){ const n=Object.keys(d.ratings).length; document.getElementById("resumeNote").style.display="block"; document.getElementById("resumeNote").textContent=`Saved progress (${n}/${STUDY.prs.length} PRs). Click Start to resume.`; }
+        const d=JSON.parse(localStorage.getItem(storageKey(v)));
+        if(d&&d.studyId===STUDY_ID&&d.instrumentVersion===STUDY.version&&d.ratings){ const n=Object.values(d.ratings).filter(isComplete).length; document.getElementById("resumeNote").style.display="block"; document.getElementById("resumeNote").textContent=`Saved progress (${n}/${STUDY.prs.length} PRs). Click Start to resume.`; }
         else document.getElementById("resumeNote").style.display="none";
       } catch(e) { document.getElementById("resumeNote").style.display="none"; }
     } else document.getElementById("resumeNote").style.display="none";
@@ -1436,6 +1503,7 @@ function start() {
   setInterval(()=>localStorage.setItem(lockKey,String(Date.now())),60000);
   buildOrder();
   hasExistingProgress=load();
+  if(hasExistingProgress) replayOutbox();
   if(!hasExistingProgress) startedAt=new Date().toISOString();
   showScreen("consent");
 }
@@ -1452,6 +1520,7 @@ function start() {
   };
 })();
 
+window.addEventListener("online",()=>{if(raterId)replayOutbox()});
 init();
 </script>
 </body>
