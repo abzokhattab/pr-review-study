@@ -137,18 +137,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .rverify-label{font-size:.66rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin-bottom:6px;display:flex;align-items:center;gap:5px}
 .rverify-label::before{content:"i";font-weight:900;color:var(--t3);border:1px solid var(--t3);border-radius:50%;width:13px;height:13px;display:inline-flex;align-items:center;justify-content:center;font-size:.58rem;text-transform:none}
 .rverify-note{font-size:.7rem;color:var(--t3);line-height:1.35;margin-bottom:7px}
-.rverify-items{display:flex;flex-direction:column;gap:5px}
-.rverify-item{border:1px solid var(--brd);border-radius:6px;background:var(--bg1);overflow:hidden}
-.rverify-item summary{display:flex;align-items:center;gap:7px;padding:5px 7px;cursor:pointer;list-style:none}
-.rverify-item summary::-webkit-details-marker{display:none}
-.rverify-item summary::before{content:"+";color:var(--t3);font-family:monospace;font-weight:800}
-.rverify-item[open] summary::before{content:"\2212"}
-.rverify-path{font-family:monospace;font-size:.7rem;color:var(--t2);overflow-wrap:anywhere}
-.rverify-kind{margin-left:auto;font-size:.58rem;font-weight:800;letter-spacing:.35px;text-transform:uppercase;color:var(--t3);white-space:nowrap;border:1px solid var(--brd);border-radius:10px;padding:1px 6px}
-.rverify-basis{font-size:.7rem;color:var(--t2);line-height:1.4;padding:6px 9px 7px 24px;border-top:1px solid var(--brd)}
-.rverify-item.v-changed .rverify-kind,.rverify-item.v-direct .rverify-kind{color:var(--blue)}
-.rverify-item.v-module_only .rverify-kind,.rverify-item.v-type_only .rverify-kind,.rverify-item.v-exists .rverify-kind{color:var(--orange)}
-.rverify-item.v-not_found{border-color:rgba(248,81,73,.55)}.rverify-item.v-not_found .rverify-kind{color:var(--red)}
+.rverify-chips{display:flex;flex-wrap:wrap;gap:6px}
+.rverify-chip{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-family:monospace;border-radius:16px;padding:3px 8px;border:1px solid var(--brd);background:var(--bg1);color:var(--t2)}
+.rverify-chip::after{font-family:-apple-system,sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.35px;text-transform:uppercase}
+.rverify-chip.v-in_pr{border-color:rgba(88,166,255,.45)}.rverify-chip.v-in_pr::after{content:"in this PR";color:var(--blue)}
+.rverify-chip.v-exists::after{content:"exists";color:var(--t3)}
+.rverify-chip.v-not_found{border-color:rgba(248,81,73,.55)}.rverify-chip.v-not_found::after{content:"not found";color:var(--red)}
 .rcontent{font-size:.83rem;line-height:1.5}
 .rcontent h1,.rcontent h2,.rcontent h3{margin-top:10px;margin-bottom:3px;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding-top:6px;border-top:1px solid var(--bg3)}
 .rcontent h1:first-child,.rcontent h2:first-child,.rcontent h3:first-child{margin-top:0;padding-top:0;border-top:none}
@@ -407,7 +401,7 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
     <p style="color:var(--t3);font-size:.88rem">You do <em>not</em> need deep knowledge of the codebase. Judge the review text itself: is it specific and grounded in the diff, or vague and generic?</p>
 
     <h3>Reading aids</h3>
-    <p>Each review begins with a short summary of what that review claims. Repository evidence labels show whether a referenced file is changed in the PR, directly used, indirectly connected, merely imported, simply exists, or was not found. Select a file to see the basis. These labels <strong>do not prove that the review's risk or consequence claim is correct</strong>. You can optionally turn on highlighting to locate text unique to each review. Highlighting starts off, and naming more files is not automatically better.</p>
+    <p>Each review begins with a short summary of what that review claims. File badges show only whether a referenced file is <strong>in this PR</strong>, <strong>exists elsewhere in the project</strong>, or was <strong>not found</strong>. They do not say that the file is affected or that the review is correct. You can optionally turn on highlighting to locate text unique to each review. Highlighting starts off, and naming more files is not automatically better.</p>
 
     <h3>Using the diff (optional)</h3>
     <p>The diff shows exactly what code changed. It is collapsed by default &mdash; you can judge the reviews without it. Expand it when you want to check whether a review describes a real risk in the changed code or a hypothetical one.</p>
@@ -507,7 +501,7 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
   <div class="comparison-grid">
     <div class="review-card">
       <div class="review-card-header"><span style="width:24px;height:24px;border-radius:6px;background:#58a6ff;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff">A</span><span style="color:#58a6ff">Review A</span></div>
-      <div class="review-card-body"><div class="rsummary"><div class="rsummary-label">Summary of this review's claims &mdash; not verified facts</div><ul><li>Flags that the retry loop has <strong>no backoff</strong> between attempts, risking a burst of requests on transient failures.</li><li>Recommends <strong>exponential backoff</strong> and a test in <code>tests/test_api_client.py</code> for the exhausted-retries case.</li></ul></div><div class="rcounts"><div class="rcounts-label">Concrete items named (auto-counted &mdash; hover to see them)</div><div class="rcounts-chips"><span class="rcount-chip" title="Components/APIs:&#10;• ApiClient.fetch()&#10;• RequestException">Components/APIs <b>2</b></span><span class="rcount-chip" title="Files:&#10;• tests/test_api_client.py">Files <b>1</b></span><span class="rcount-chip" title="Test targets:&#10;• tests/test_api_client.py&#10;• exhausted-retries case">Test targets <b>2</b></span><span class="rcount-chip" title="Edge cases:&#10;• transient failure / rate limiting">Edge cases <b>1</b></span><span class="rcount-chip" title="Reasoned claims:&#10;• no backoff could overwhelm the server">Reasoned claims <b>1</b></span></div></div><div class="rverify"><div class="rverify-label">Repository reference evidence</div><div class="rverify-note">Confirms that the file exists in this example; it does not prove the review's risk claim.</div><div class="rverify-items"><details class="rverify-item v-exists"><summary><span class="rverify-path">tests/test_api_client.py</span><span class="rverify-kind">exists; link unknown</span></summary><div class="rverify-basis">The file exists in the example repository; no further relationship is asserted for practice.</div></details></div></div><div class="rcontent"><h2>Problems found</h2><p>The <code>fetch()</code> retry loop has <span class="uniq-A">no backoff between attempts</span>, so a transient failure turns into a tight burst of requests against the upstream service.</p><h2>Files and lines referenced</h2><p><code>ApiClient.fetch()</code>: <span class="uniq-A">the retry loop catches all <code>RequestException</code> subtypes including <code>ConnectionError</code> and <code>Timeout</code>, with no delay between attempts.</span></p><h2>What could go wrong</h2><p>Without backoff, rapid repeated requests could overwhelm the server or trigger rate limiting under transient failures.</p><h2>Suggestions</h2><p><span class="uniq-A">Add exponential backoff (e.g. <code>time.sleep(2 ** attempt)</code>) between retries. Add tests in <code>tests/test_api_client.py</code> covering the exhausted-retries case.</span></p></div></div>
+      <div class="review-card-body"><div class="rsummary"><div class="rsummary-label">Summary of this review's claims &mdash; not verified facts</div><ul><li>Flags that the retry loop has <strong>no backoff</strong> between attempts, risking a burst of requests on transient failures.</li><li>Recommends <strong>exponential backoff</strong> and a test in <code>tests/test_api_client.py</code> for the exhausted-retries case.</li></ul></div><div class="rcounts"><div class="rcounts-label">Concrete items named (auto-counted &mdash; hover to see them)</div><div class="rcounts-chips"><span class="rcount-chip" title="Components/APIs:&#10;• ApiClient.fetch()&#10;• RequestException">Components/APIs <b>2</b></span><span class="rcount-chip" title="Files:&#10;• tests/test_api_client.py">Files <b>1</b></span><span class="rcount-chip" title="Test targets:&#10;• tests/test_api_client.py&#10;• exhausted-retries case">Test targets <b>2</b></span><span class="rcount-chip" title="Edge cases:&#10;• transient failure / rate limiting">Edge cases <b>1</b></span><span class="rcount-chip" title="Reasoned claims:&#10;• no backoff could overwhelm the server">Reasoned claims <b>1</b></span></div></div><div class="rverify"><div class="rverify-label">File check</div><div class="rverify-note">Shows only whether each file exists in the example project.</div><div class="rverify-chips"><span class="rverify-chip v-exists">tests/test_api_client.py</span></div></div><div class="rcontent"><h2>Problems found</h2><p>The <code>fetch()</code> retry loop has <span class="uniq-A">no backoff between attempts</span>, so a transient failure turns into a tight burst of requests against the upstream service.</p><h2>Files and lines referenced</h2><p><code>ApiClient.fetch()</code>: <span class="uniq-A">the retry loop catches all <code>RequestException</code> subtypes including <code>ConnectionError</code> and <code>Timeout</code>, with no delay between attempts.</span></p><h2>What could go wrong</h2><p>Without backoff, rapid repeated requests could overwhelm the server or trigger rate limiting under transient failures.</p><h2>Suggestions</h2><p><span class="uniq-A">Add exponential backoff (e.g. <code>time.sleep(2 ** attempt)</code>) between retries. Add tests in <code>tests/test_api_client.py</code> covering the exhausted-retries case.</span></p></div></div>
     </div>
     <div class="review-card">
       <div class="review-card-header"><span style="width:24px;height:24px;border-radius:6px;background:#a371f7;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff">B</span><span style="color:#a371f7">Review B</span></div>
@@ -677,8 +671,8 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
 /* ═══════════════════════════════════════════════════════
    Human Evaluation Study — Python PRs
    - 6 PRs from small familiar Python repos (requests, flask, click)
-   - baseline_strict vs kg pairs with claim summaries, neutral repository
-     evidence labels, and
+   - baseline_strict vs kg pairs with claim summaries, simple file-existence
+     badges, and
      optional highlighting; criterion-mapped count strip omitted
    - Order randomized per rater (seeded shuffle)
    - Single comparison per PR: baseline vs KG (blind A/B)
@@ -974,40 +968,27 @@ function buildCountStrip(c) {
   return `<div class="rcounts"><div class="rcounts-label">Concrete items named (auto-counted &mdash; hover to see them)</div><div class="rcounts-chips">${chips}</div></div>`;
 }
 
-/* ═══ File-reference evidence (precomputed offline at the PR commit).
-   These facts describe repository relationships only. They never certify a
-   review's predicted consequence or say that a named file is affected. ═══ */
-const RELATION_LABELS = {
-  changed: "changed in PR",
-  direct: "direct use",
-  indirect: "indirect path",
-  related: "related data flow",
-  module_only: "module import only",
-  type_only: "type-only reference",
-  exists: "exists; link unknown",
-  not_found: "not found",
-};
+/* ═══ Simple file check (precomputed offline at the PR commit).
+   The richer relationship audit remains in study_data.json for researchers,
+   but raters only need to know whether a named file is in the PR, exists
+   elsewhere in the project, or was not found. ═══ */
 function buildVerifyStrip(ak) {
   if (!ak || !Object.keys(ak).length) return "";
-  const order = { not_found:0, direct:1, indirect:2, related:3, module_only:4, type_only:5, exists:6, changed:7 };
-  const items = Object.entries(ak)
+  const order = { not_found:0, exists:1, in_pr:2 };
+  const chips = Object.entries(ak)
     .map(([ref, raw]) => {
-      // Legacy fallback is intentionally conservative for old practice data.
       const ev = typeof raw === "string"
-        ? {relationship: raw==="in_diff" ? "changed" : raw==="not_found" ? "not_found" : "exists",
-           basis: raw==="in_diff" ? "This file is changed by the PR itself."
-             : raw==="not_found" ? "No such file was found in the repository."
-             : "File exists; no connection to the changed behavior was established."}
+        ? {existence: raw==="not_found" ? "not_found" : "exists",
+           relationship: raw==="in_diff" ? "changed" : raw}
         : raw;
-      return [ref, ev];
+      const status = ev.existence==="not_found"
+        ? "not_found" : ev.relationship==="changed" ? "in_pr" : "exists";
+      return [ref, status];
     })
-    .sort((a, b) => (order[a[1].relationship] ?? 9) - (order[b[1].relationship] ?? 9))
-    .map(([ref, ev]) => {
-      const rel = ev.relationship || "exists";
-      return `<details class="rverify-item v-${_attr(rel)}"><summary><span class="rverify-path">${_attr(ref)}</span><span class="rverify-kind">${_attr(RELATION_LABELS[rel] || rel)}</span></summary><div class="rverify-basis">${_attr(ev.basis || "No further relationship evidence recorded.")}</div></details>`;
-    })
+    .sort((a,b)=>(order[a[1]]??9)-(order[b[1]]??9))
+    .map(([ref,status])=>`<span class="rverify-chip v-${status}">${_attr(ref)}</span>`)
     .join("");
-  return `<div class="rverify"><div class="rverify-label">Repository reference evidence</div><div class="rverify-note">Confirms whether files exist and describes the observed relationship. It does not prove that the review's risk or consequence claim is correct. Select a file for details.</div><div class="rverify-items">${items}</div></div>`;
+  return `<div class="rverify"><div class="rverify-label">File check</div><div class="rverify-note">Shows only whether each file is in this PR, exists elsewhere in the project, or was not found. It does not say the file is affected or the review is correct.</div><div class="rverify-chips">${chips}</div></div>`;
 }
 
 /* ═══ Per-criterion relevance (Review A / Both / Neither / Review B for each of 6 criteria) ═══ */
