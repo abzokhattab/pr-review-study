@@ -63,6 +63,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .demo-opts label:hover{background:var(--bg3);color:var(--t2)}
 .demo-opts input{display:none}
 .demo-opts label.selected{background:var(--blue);border-color:var(--blue);color:#fff}
+.demo-hint{display:block;font-size:.74rem;font-weight:400;color:var(--t3);margin:-2px 0 6px}
+/* Occupation labels name the role explicitly ("Junior Developer", not
+   "Junior"), which needs two lines per cell to keep all six on one row. */
+.demo-opts.wrap2 label{white-space:normal;line-height:1.2;display:flex;align-items:center;justify-content:center;min-height:40px;padding:6px 4px}
+.demo-other{margin-top:8px;width:100%;background:var(--bg2);border:1px solid var(--brd);border-radius:6px;padding:8px 10px;color:var(--t1);font-size:.8rem;display:none}
+.demo-other.show{display:block}
 
 /* ── Briefing ── */
 #briefing .brief-card{background:var(--bg1);border:1px solid var(--brd);border-radius:12px;padding:28px;margin-bottom:20px;max-width:900px;margin-left:auto;margin-right:auto}
@@ -296,7 +302,7 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
     <p>You will read <strong>6 Pull Requests</strong> from real open-source projects and compare two AI-generated reviews for each.</p>
     <p style="color:var(--t3);font-size:.85rem;margin-bottom:16px">Takes approximately 15&ndash;25 minutes. Progress is saved on this device &mdash; you can take breaks.</p>
     <div class="igroup">
-      <input type="text" id="raterInput" placeholder="Enter your name or rater ID" autocomplete="off" />
+      <input type="text" id="raterInput" placeholder="Enter your name or a nickname" autocomplete="off" />
       <button class="btn btn-p" id="startBtn" disabled>Start</button>
     </div>
     <p id="resumeNote"></p>
@@ -309,16 +315,19 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
     <h2>Informed Consent</h2>
     <p>You are being invited to participate in a research study on AI-assisted code review quality, conducted as part of a Master's thesis at the Hasso Plattner Institute, University of Potsdam.</p>
     <p><strong>What you will do:</strong> For each of 6 Pull Requests, you will read a plain-language description and two AI-generated reviews side by side, then judge which review is more useful. The code diff is available as an optional reference. The study takes approximately 15&ndash;25 minutes.</p>
-    <p><strong>Data collected:</strong></p>
+    <p><strong>What is recorded:</strong></p>
     <ul>
-      <li>Your name or a rater ID</li>
-      <li>Background information: role, programming experience, PR review frequency</li>
-      <li>Your preference judgments and, if you choose to provide it, brief reasoning</li>
-      <li>Time spent per comparison</li>
-      <li>Optional open-ended feedback at the end</li>
+      <li>The identifier you enter. It does not have to be your real name &mdash; any nickname you will remember is fine, and it lets you resume if you take a break.</li>
+      <li>Background you provide: occupation, years of programming experience, and how often you review pull requests.</li>
+      <li>Your answers: the per-criterion choices, your overall preference, the difficulty rating, and any reasoning you choose to write.</li>
+      <li>How you used the page: time spent on each comparison, when the session started and finished, how many times you opened the Pull Request on GitHub, and whether you switched on the optional highlighting.</li>
+      <li>Optional open-ended feedback at the end.</li>
     </ul>
-    <p>The name or rater ID you enter is stored with your responses so the researcher can identify completed submissions. The study form does not ask for your email address or IP address. Study responses are used solely for academic research.</p>
-    <p><strong>Participation is voluntary.</strong> You may quit at any time. Contact: <a href="mailto:Abdelrahman.Khattab@student.hpi.uni-potsdam.de" style="color:var(--blue)">Abdelrahman Khattab</a> &mdash; Hasso Plattner Institute.</p>
+    <p>The form does not ask for your email address or IP address.</p>
+    <p><strong>Where your answers are stored.</strong> Each comparison you submit is sent to a Google Sheet belonging to the researcher, via Google Apps Script. Google acts as the processor, and your data may be held on servers outside the European Economic Area. A copy is also kept in this browser's local storage so you can take breaks; clearing your browser data removes it.</p>
+    <p><strong>Legal basis and retention.</strong> Processing is based on your consent (Art. 6(1)(a) GDPR). Responses are kept until the thesis has been examined and any resulting publication is complete, and are deleted no later than 31 December 2027. Only aggregated or de-identified results appear in the thesis or in any publication.</p>
+    <p><strong>Your rights.</strong> Participation is voluntary. You may stop at any time, without giving a reason and without any disadvantage. You may also withdraw your consent after submitting, and request access to, correction of, or deletion of your data &mdash; quote the identifier you entered so it can be located. You have the right to lodge a complaint with the competent data protection supervisory authority.</p>
+    <p><strong>Contact:</strong> <a href="mailto:Abdelrahman.Khattab@student.hpi.uni-potsdam.de" style="color:var(--blue)">Abdelrahman Khattab</a> &mdash; Hasso Plattner Institute, University of Potsdam.</p>
     <div class="consent-check">
       <input type="checkbox" id="consentBox" />
       <label for="consentBox">I have read and understood the above. I voluntarily agree to participate.</label>
@@ -336,14 +345,17 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
     <h2>About You</h2>
     <p class="demo-sub">Three quick questions before we start.</p>
     <div class="demo-group">
-      <span class="demo-q">Current role</span>
-      <div class="demo-opts" data-field="role">
+      <span class="demo-q">Primary occupation</span>
+      <span class="demo-hint">Pick whichever takes more of your time. PhD students: choose Researcher.</span>
+      <div class="demo-opts wrap2" data-field="role">
         <label onclick="demoSelect(this)"><input type="radio" name="d_role" value="student">Student</label>
+        <label onclick="demoSelect(this)"><input type="radio" name="d_role" value="phd_researcher">Researcher</label>
         <label onclick="demoSelect(this)"><input type="radio" name="d_role" value="junior_dev">Junior Developer</label>
-        <label onclick="demoSelect(this)"><input type="radio" name="d_role" value="software_engineer">Software Engineer</label>
-        <label onclick="demoSelect(this)"><input type="radio" name="d_role" value="senior_engineer">Senior Engineer</label>
+        <label onclick="demoSelect(this)"><input type="radio" name="d_role" value="mid_level_dev">Mid-level Developer</label>
+        <label onclick="demoSelect(this)"><input type="radio" name="d_role" value="senior_dev">Senior Developer</label>
         <label onclick="demoSelect(this)"><input type="radio" name="d_role" value="other">Other</label>
       </div>
+      <input id="roleOther" class="demo-other" type="text" maxlength="80" placeholder="How would you describe it? (optional)">
     </div>
     <div class="demo-group">
       <span class="demo-q">Years of programming experience</span>
@@ -691,7 +703,11 @@ let STUDY = null;
 
 async function loadStudy() {
   if (window.__STUDY_DATA) { STUDY = window.__STUDY_DATA; return; }
-  const r = await fetch("study_data.json");
+  // Always revalidate. Every submitted response is tagged with the version
+  // carried in this file, so a returning rater holding a cached copy from a
+  // previous instrument would file responses under the wrong version while
+  // seeing the current UI. "no-cache" still permits a 304.
+  const r = await fetch("study_data.json", { cache: "no-cache" });
   STUDY = await r.json();
 }
 
@@ -734,12 +750,23 @@ function buildOrder() {
     const j = Math.floor(r() * (i + 1));
     [prIndices[i], prIndices[j]] = [prIndices[j], prIndices[i]];
   }
-  taskOrder = []; modeMap = {};
+  // Side assignment is balanced, not an independent coin per trial: half the
+  // trials show mode_a on the left, half on the right, then shuffled. An
+  // independent coin left 22% of raters with 5 or 6 of their 6 trials on the
+  // same side, a bias this n cannot average out.
+  const nTrials = prIndices.length * STUDY.comparisons.length;
+  const flips = Array.from({length: nTrials}, (_, i) => i < Math.floor(nTrials / 2));
+  if (nTrials % 2) flips[nTrials - 1] = r() < 0.5;
+  for (let i = flips.length - 1; i > 0; i--) {
+    const j = Math.floor(r() * (i + 1));
+    [flips[i], flips[j]] = [flips[j], flips[i]];
+  }
+  taskOrder = []; modeMap = {}; let flipIdx = 0;
   for (let pi of prIndices) {
     const pr = STUDY.prs[pi];
     for (let ci = 0; ci < STUDY.comparisons.length; ci++) {
       const comp = STUDY.comparisons[ci];
-      const flip = r() < 0.5;
+      const flip = flips[flipIdx++];
       const left  = flip ? comp.mode_b : comp.mode_a;
       const right = flip ? comp.mode_a : comp.mode_b;
       const taskId = `${pr.pr_id}_${comp.id}`;
@@ -980,20 +1007,28 @@ function buildCountStrip(c) {
    The strip was withdrawn because its badge palette was a perfect arm
    signature on the frozen stimuli: baseline reviews produced an all-"in this
    PR" strip while kg reviews produced a mixed one, letting a rater sort the
-   arms without reading a word. Here every reference looks the same and only
-   the tooltip text differs. ═══ */
+   arms without reading a word. Every reference now looks identical and only
+   the tooltip text differs.
+
+   The tooltip deliberately reports EXISTENCE ONLY. It must never surface the
+   audit's `basis` or `relationship` fields. Existence is a fact about the
+   repository that a rater can confirm independently by expanding the diff;
+   `basis` and `relationship` are this project's own adjudication of whether a
+   review's claim holds, which is the judgement the rater is being asked to
+   make. Rendering them would answer the question the instrument is supposed to
+   ask, in either direction and for either arm, and would import information
+   that is not present in the stimulus. The asymmetry this leaves — baseline
+   cites only files the PR changed, kg also cites cross-file dependencies — is
+   a property of the reviews themselves and is recorded as an accepted residual
+   in ANALYSIS_PLAN.md. Keep this function limited to existence. ═══ */
 function _tipText(ev) {
   if (!ev) return "";
-  if (typeof ev === "string") {
-    return ev === "not_found"
-      ? "This path was not found in the project at this commit."
-      : ev === "in_diff"
-        ? "This file is changed by the PR itself."
-        : "This file exists in the project.";
-  }
-  if (ev.basis) return ev.basis;
-  if (ev.existence === "not_found") return "This path was not found in the project at this commit.";
-  if (ev.relationship === "changed") return "This file is changed by the PR itself.";
+  const existence = typeof ev === "string" ? ev : ev.existence;
+  const changed = typeof ev === "string"
+    ? ev === "in_diff"
+    : ev.relationship === "changed";
+  if (existence === "not_found") return "This file was not found in the project.";
+  if (changed) return "This file is changed by this PR.";
   return "This file exists in the project.";
 }
 
@@ -1391,7 +1426,7 @@ function goPrev() {
 }
 
 /* ═══ Webhook ═══ */
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbxh4vSGKrqyt3GiwMXIBPv5AfoB3nhYYMqwU7IRy6SO4xy4qYRDxHo61vIcqaD7hwyScw/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbx2Ehlz0WYC4JvZnF-2hFV9veZGHRgPOa3UCydO27WrnxevV0DcTpEbKAxixM2igMp7Gg/exec";
 
 function _outboxKey() { return "heval4_outbox_"+STUDY_ID+"_"+STUDY.version+"_"+(raterId||"_anon"); }
 function appendToOutbox(payload) {
@@ -1442,6 +1477,7 @@ function submitTaskToSheet(taskId) {
     study_id: STUDY_ID,
     instrument_version: STUDY.version,
     rater_id: raterId,
+    started_at: startedAt,              // without this the sheet has no session duration
     completed_at: new Date().toISOString(),
     demographics: demographics,
     ratings: [{
@@ -1491,8 +1527,17 @@ function showScreen(id) { document.querySelectorAll(".screen").forEach(s=>s.clas
 
 /* ═══ Demographics ═══ */
 function demoSelect(label) {
-  label.closest('.demo-opts').querySelectorAll('label').forEach(l=>l.classList.remove('selected'));
+  const group = label.closest('.demo-opts');
+  group.querySelectorAll('label').forEach(l=>l.classList.remove('selected'));
   label.classList.add('selected');
+  if (group.dataset.field === 'role') {
+    // Free text is offered only for "other", so the catch-all bucket stays
+    // interpretable instead of collapsing everyone unusual into one code.
+    const box = document.getElementById('roleOther');
+    const isOther = label.querySelector('input').value === 'other';
+    box.classList.toggle('show', isOther);
+    if (!isOther) box.value = '';
+  }
   let ok=true;
   document.querySelectorAll('#demographics .demo-opts').forEach(f=>{if(!f.querySelector('label.selected'))ok=false});
   document.getElementById('demoBtn').disabled=!ok;
@@ -1500,6 +1545,8 @@ function demoSelect(label) {
 function getDemographics() {
   const r={};
   document.querySelectorAll('#demographics .demo-opts').forEach(c=>{const s=c.querySelector('input:checked');if(s)r[c.dataset.field]=s.value});
+  const box = document.getElementById('roleOther');
+  if (box && r.role === 'other' && box.value.trim()) r.role_other = box.value.trim().slice(0, 80);
   return r;
 }
 

@@ -1,5 +1,5 @@
 {
-  "version": "python-prs-study-v4-inline-file-tips-r5",
+  "version": "python-prs-study-v4-consent-disclosure-r9",
   "criteria": [
     {
       "id": "F3*",
@@ -72,8 +72,8 @@
         ],
         "kg": [
           "Lists `src/requests/sessions.py` and `src/requests/api.py` as files that use `prepare_body` and could be affected.",
-          "Notes the new test in `tests/test_requests.py` covers only the one wrapper type this PR fixes; other wrapper types stay untested.",
-          "Suggests checking those two files before merging."
+          "Warns the new detection logic could break other code that relied on how `prepare_body` behaved before.",
+          "Notes the new test in `tests/test_requests.py` covers only the one wrapper type this PR fixes; other wrapper types stay untested."
         ]
       },
       "review_unique": {
@@ -208,7 +208,7 @@
       "pr_number": 5637,
       "title": "configure and check `request.trusted_hosts`",
       "url": "https://github.com/pallets/flask/pull/5637",
-      "body": "Add `TRUSTED_HOSTS` config. In `Flask.create_url_adapter`, which is called when creating a `RequestContext`, set `request.trusted_hosts` to the config. Call `get_host` with the config, and assign it to `request.host` to pre-cache the property.\r\n\r\nI considered making `flask.Request.trusted_hosts` a property, so that setting it would trigger validation again automatically. I'm not confident this difference in behavior from Werkzeug, where only accessing `request.host` triggers validation, would be good. If it's a good idea, it can be done in Werkzeug.\r\n\r\nfixes #5636 ",
+      "body": "Add `TRUSTED_HOSTS` config. In `Flask.create_url_adapter`, which is called when creating a `RequestContext`, set `request.trusted_hosts` to the config. Call `get_host` with the config, and assign it to `request.host` to pre-cache the property.\r\n\r\nI considered making `flask.Request.trusted_hosts` a property, so that setting it would trigger validation again automatically. I'm not confident this difference in behavior from Werkzeug, where only accessing `request.host` triggers validation, would be good. If it's a good idea, it can be done in Werkzeug.\r\n\r\nfixes #5636",
       "pr_context": "`flask` is a popular Python web framework. This PR adds a new setting called `TRUSTED_HOSTS`: a list of website host names the app should accept requests for. When it is set, requests sent to any other host name get rejected with an error. The check runs in the code that prepares every incoming request.",
       "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex e8820b4f86..6118d981de 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -26,6 +26,8 @@ Unreleased\n -   Fix how setting ``host_matching=True`` or ``subdomain_matching=False``\n     interacts with ``SERVER_NAME``. Setting ``SERVER_NAME`` no longer restricts\n     requests to only that domain. :issue:`5553`\n+-   ``Request.trusted_hosts`` is checked during routing, and can be set through\n+    the ``TRUSTED_HOSTS`` config. :issue:`5636`\n \n \n Version 3.0.3\ndiff --git a/docs/config.rst b/docs/config.rst\nindex ed68160e46..5695bbd053 100644\n--- a/docs/config.rst\n+++ b/docs/config.rst\n@@ -258,6 +258,21 @@ The following configuration values are used internally by Flask:\n \n     Default: ``None``\n \n+.. py:data:: TRUSTED_HOSTS\n+\n+    Validate :attr:`.Request.host` and other attributes that use it against\n+    these trusted values. Raise a :exc:`~werkzeug.exceptions.SecurityError` if\n+    the host is invalid, which results in a 400 error. If it is ``None``, all\n+    hosts are valid. Each value is either an exact match, or can start with\n+    a dot ``.`` to match any subdomain.\n+\n+    Validation is done during routing against this value. ``before_request`` and\n+    ``after_request`` callbacks will still be called.\n+\n+    Default: ``None``\n+\n+    .. versionadded:: 3.1\n+\n .. py:data:: SERVER_NAME\n \n     Inform the application what host and port it is bound to.\ndiff --git a/src/flask/app.py b/src/flask/app.py\nindex 166a129fd9..905b247705 100644\n--- a/src/flask/app.py\n+++ b/src/flask/app.py\n@@ -24,6 +24,7 @@\n from werkzeug.routing import Rule\n from werkzeug.serving import is_running_from_reloader\n from werkzeug.wrappers import Response as BaseResponse\n+from werkzeug.wsgi import get_host\n \n from . import cli\n from . import typing as ft\n@@ -183,6 +184,7 @@ class Flask(App):\n             \"SECRET_KEY_FALLBACKS\": None,\n             \"PERMANENT_SESSION_LIFETIME\": timedelta(days=31),\n             \"USE_X_SENDFILE\": False,\n+            \"TRUSTED_HOSTS\": None,\n             \"SERVER_NAME\": None,\n             \"APPLICATION_ROOT\": \"/\",\n             \"SESSION_COOKIE_NAME\": \"session\",\n@@ -441,6 +443,11 @@ def create_url_adapter(self, request: Request | None) -> MapAdapter | None:\n         .. versionadded:: 0.6\n         \"\"\"\n         if request is not None:\n+            if (trusted_hosts := self.config[\"TRUSTED_HOSTS\"]) is not None:\n+                request.trusted_hosts = trusted_hosts\n+\n+            # Check trusted_hosts here until bind_to_environ does.\n+            request.host = get_host(request.environ, request.trusted_hosts)  # pyright: ignore\n             subdomain = None\n             server_name = self.config[\"SERVER_NAME\"]\n \ndiff --git a/tests/test_request.py b/tests/test_request.py\nindex 7839a69339..3e95ab320c 100644\n--- a/tests/test_request.py\n+++ b/tests/test_request.py\n@@ -52,3 +52,19 @@ def test_limit_config(app: Flask):\n         assert r.max_content_length == 90\n         assert r.max_form_memory_size == 30\n         assert r.max_form_parts == 4\n+\n+\n+def test_trusted_hosts_config(app: Flask) -> None:\n+    app.config[\"TRUSTED_HOSTS\"] = [\"example.test\", \".other.test\"]\n+\n+    @app.get(\"/\")\n+    def index() -> str:\n+        return \"\"\n+\n+    client = app.test_client()\n+    r = client.get(base_url=\"http://example.test\")\n+    assert r.status_code == 200\n+    r = client.get(base_url=\"http://a.other.test\")\n+    assert r.status_code == 200\n+    r = client.get(base_url=\"http://bad.test\")\n+    assert r.status_code == 400\n",
       "reviews": {
@@ -381,7 +381,7 @@
       "pr_number": 3493,
       "title": "Handle empty bytes in echo",
       "url": "https://github.com/pallets/click/pull/3493",
-      "body": "Previously, an empty byte string could cause an exception if `nl=True`.\r\n\r\nThis PR narrows the type scope of `out`, to `bytes() | bytearray() | str` and handles all cases exhaustively.\r\n\r\nWe also change from `typing.Any`, which effectively disables typing for a variable, to `object`, which is more restrictive. See  https://mypy.readthedocs.io/en/latest/dynamic_typing.html#any-vs-object for more.\r\n\r\nfixes #3487\r\n\r\n<!--\r\nEnsure each step in CONTRIBUTING.rst is complete, especially the following:\r\n\r\n- Add tests that demonstrate the correct behavior of the change. Tests\r\n  should fail without the change.\r\n- Add or update relevant docs, in the docs folder and in code.\r\n- Add an entry in CHANGES.rst summarizing the change and linking to the issue.\r\n- Add `.. versionchanged::` entries in any relevant code docs.\r\n-->\r\n",
+      "body": "Previously, an empty byte string could cause an exception if `nl=True`.\r\n\r\nThis PR narrows the type scope of `out`, to `bytes() | bytearray() | str` and handles all cases exhaustively.\r\n\r\nWe also change from `typing.Any`, which effectively disables typing for a variable, to `object`, which is more restrictive. See  https://mypy.readthedocs.io/en/latest/dynamic_typing.html#any-vs-object for more.\r\n\r\nfixes #3487",
       "pr_context": "`click` is a Python library for building command-line tools. Its `echo` function prints text to the terminal (handling colors, pipes, and other quirks for you). This PR fixes a crash when printing an empty byte string, and tightens the declared type of what the function accepts.",
       "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex eb32cd87d..c64074013 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -10,6 +10,8 @@ Unreleased\n -   Zsh completion scripts parse correctly on Windows. :issue:`3277`\n -   Shell completion of `Choice` `Enum` values produces a valid completion\n     result. :issue:`3015`\n+-   Fix empty byte-string handling in echo. :issue:`3487`\n+\n \n Version 8.4.0\n -------------\ndiff --git a/src/click/utils.py b/src/click/utils.py\nindex 223d6b8d7..67922b894 100644\n--- a/src/click/utils.py\n+++ b/src/click/utils.py\n@@ -232,7 +232,7 @@ def __iter__(self) -> cabc.Iterator[t.AnyStr]:\n \n \n def echo(\n-    message: t.Any | None = None,\n+    message: object = None,\n     file: t.IO[t.Any] | None = None,\n     nl: bool = True,\n     err: bool = False,\n@@ -287,14 +287,15 @@ def echo(\n         if file is None:\n             return\n \n-    # Convert non bytes/text into the native string type.\n-    if message is not None and not isinstance(message, (str, bytes, bytearray)):\n-        out: str | bytes | bytearray | None = str(message)\n-    else:\n-        out = message\n+    match message:\n+        case str() | bytes() | bytearray():\n+            out = message\n+        case None:\n+            out = \"\"\n+        case _:\n+            out = str(message)\n \n     if nl:\n-        out = out or \"\"\n         if isinstance(out, str):\n             out += \"\\n\"\n         else:\n@@ -310,7 +311,6 @@ def echo(\n     # would expect. Eg: you can write to StringIO for other cases.\n     if isinstance(out, (bytes, bytearray)):\n         binary_file = _find_binary_writer(file)\n-\n         if binary_file is not None:\n             file.flush()\n             binary_file.write(out)\ndiff --git a/tests/test_utils.py b/tests/test_utils.py\nindex a16493b2d..6dd0ede11 100644\n--- a/tests/test_utils.py\n+++ b/tests/test_utils.py\n@@ -8,6 +8,7 @@\n from decimal import Decimal\n from fractions import Fraction\n from functools import partial\n+from io import BytesIO\n from io import StringIO\n from unittest.mock import patch\n \n@@ -97,6 +98,10 @@ def test_echo_custom_file():\n     click.echo(\"hello\", file=f)\n     assert f.getvalue() == \"hello\\n\"\n \n+    b = BytesIO()\n+    click.echo(b\"\", b)\n+    assert b.getvalue() == b\"\\n\"\n+\n \n def test_echo_no_streams(monkeypatch, runner):\n     \"\"\"echo should not fail when stdout and stderr are None with pythonw on Windows.\"\"\"\n",
       "reviews": {
@@ -395,9 +395,9 @@
           "Flags that `None` and empty text with the `nl=False` option (print without a line break) are untested; the test file is `tests/test_utils.py`."
         ],
         "kg": [
-          "Identifies `src/click/core.py` and `src/click/termui.py` as files that use `echo` and could be affected by the stricter type declaration.",
-          "Flags there is no test for calling `echo` with values that are not text or bytes (`str`/`bytes`/`bytearray`).",
-          "Points to `src/click/testing.py` as a related testing helper beyond `tests/test_utils.py`."
+          "Warns the stricter type could break code that calls `echo` with anything other than text or bytes.",
+          "Identifies `src/click/core.py` and `src/click/termui.py` as files that use `echo`, and `src/click/testing.py` as a related testing helper.",
+          "Flags there is no test for calling `echo` with values that are not text or bytes (`str`/`bytes`/`bytearray`)."
         ]
       },
       "review_unique": {
@@ -559,9 +559,9 @@
           "Flags that long or multi-step redirect chains stay untested."
         ],
         "kg": [
+          "Warns the change could break code that expects the original request to still appear in `resp.history`, and suggests keeping it there so existing code works.",
           "Points to `src/requests/__init__.py` and `src/requests/api.py` as files that depend on `resolve_redirects`.",
-          "Notes the new test in `tests/test_requests.py` covers only the self-reference case; longer redirect chains stay untested.",
-          "Suggests optionally keeping the original request in the history so existing code keeps working."
+          "Notes the new test in `tests/test_requests.py` covers only the self-reference case; longer redirect chains stay untested."
         ]
       },
       "review_unique": {
@@ -713,8 +713,8 @@
         ],
         "kg": [
           "Names `src/flask/templating.py` and `src/flask/blueprints.py` as files that use `stream_with_context` and could be affected.",
-          "Flags missing tests for an error raised mid-stream or for the context being manually popped before iteration.",
-          "Suggests double-checking that ordinary (non-async) views still work after the rewrite."
+          "Warns the rewrite could break ordinary (non-async) views that use `stream_with_context`, because it changes how request information is kept during streaming.",
+          "Flags missing tests for an error raised mid-stream or for the context being manually popped before iteration."
         ]
       },
       "review_unique": {
@@ -872,7 +872,7 @@
           "Suggests checking the codebase for other places that format placeholders the same way."
         ],
         "kg": [
-          "Lists `src/click/types.py` and `src/click/parser.py` as files that rely on `make_metavar` (the function that builds those placeholders) and could be affected.",
+          "Lists `src/click/types.py` and `src/click/parser.py` as files that rely on `make_metavar` (the function that builds those placeholders), where the fix could break how placeholders are shown.",
           "Points to `tests/test_shell_completion.py`, `tests/test_context.py`, and `tests/test_defaults.py` as related test files.",
           "Flags that nested choice placeholders stay untested and the API documentation was not updated."
         ]
