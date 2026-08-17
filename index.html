@@ -133,16 +133,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .rcount-chip{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;color:var(--t2);background:var(--bg1);border:1px solid var(--brd);border-radius:20px;padding:2px 9px;cursor:default}
 .rcount-chip b{font-size:.76rem;font-weight:800;color:var(--blue);min-width:10px;text-align:center}
 .rcount-chip.zero{opacity:.45}.rcount-chip.zero b{color:var(--t3)}
-.rverify{margin-bottom:12px;border:1px solid var(--brd);border-radius:8px;padding:8px 10px;background:var(--bg2)}
-.rverify-label{font-size:.66rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin-bottom:6px;display:flex;align-items:center;gap:5px}
-.rverify-info{font-weight:900;color:var(--t3);border:1px solid var(--t3);border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;font-size:.6rem;text-transform:none;cursor:help}
-.rverify-note{font-size:.7rem;color:var(--t3);line-height:1.35;margin-bottom:7px}
-.rverify-chips{display:flex;flex-wrap:wrap;gap:6px}
-.rverify-chip{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-family:monospace;border-radius:16px;padding:3px 8px;border:1px solid var(--brd);background:var(--bg1);color:var(--t2)}
-.rverify-chip::after{font-family:-apple-system,sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.35px;text-transform:uppercase}
-.rverify-chip.v-in_pr{border-color:rgba(88,166,255,.45)}.rverify-chip.v-in_pr::after{content:"changed in this PR";color:var(--blue)}
-.rverify-chip.v-exists::after{content:"exists in project";color:var(--t3)}
-.rverify-chip.v-not_found{border-color:rgba(248,81,73,.55)}.rverify-chip.v-not_found::after{content:"not found in project";color:var(--red)}
+/* Inline file-reference annotation. Replaces the former "File check" strip,
+   whose badge palette differed systematically between the two arms and so
+   acted as an un-blinding cue. Every reference gets one identical neutral
+   indicator regardless of what the audit found; the status is carried only
+   by the tooltip prose. Do not add status-dependent colour here. */
+.fref{border-bottom:1px dashed var(--t3);cursor:help;text-decoration:none}
+.fref:focus{outline:1px dotted var(--t3);outline-offset:2px}
+.ftip{position:fixed;z-index:9999;max-width:300px;padding:7px 9px;border-radius:6px;
+  background:#1c1f24;color:#f0f2f5;border:1px solid #3a3f46;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-size:.72rem;line-height:1.4;font-weight:400;text-transform:none;letter-spacing:0;
+  box-shadow:0 4px 14px rgba(0,0,0,.45);pointer-events:none;opacity:0;transition:opacity .1s}
+.ftip.on{opacity:1}
+.ftip-path{display:block;font-family:'SF Mono',SFMono-Regular,Consolas,monospace;
+  font-size:.68rem;color:#c9ced6;margin-bottom:3px;word-break:break-all}
 .rcontent{font-size:.83rem;line-height:1.5}
 .rcontent h1,.rcontent h2,.rcontent h3{margin-top:10px;margin-bottom:3px;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding-top:6px;border-top:1px solid var(--bg3)}
 .rcontent h1:first-child,.rcontent h2:first-child,.rcontent h3:first-child{margin-top:0;padding-top:0;border-top:none}
@@ -273,8 +278,8 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
 #bodyC .md-code{background:var(--bg2);border:1px solid var(--bg3);border-radius:3px;padding:.5px 4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.84em;color:var(--t1)}
 #bodyC .md-pre{margin:.55em 0;padding:8px 10px;background:var(--bg2);border:1px solid var(--bg3);border-radius:4px;overflow-x:auto;font-size:.82em;line-height:1.4}
 #bodyC .md-img{display:inline-block;padding:1px 6px;margin:0 2px;background:var(--bg2);border:1px solid var(--bg3);border-radius:3px;font-size:.78em;color:var(--t2);font-style:italic}
-/* Practice mirrors the final instrument: summaries + badges are visible,
-   counts are omitted, and semantic highlighting starts off. */
+/* Practice mirrors the final instrument: summaries and inline file-reference
+   tooltips are present, counts are omitted, and highlighting starts off. */
 #warmup .rcounts{display:none!important}
 #warmup:not(.highlights-on) .uniq-A,#warmup:not(.highlights-on) .uniq-B{background:transparent!important;border-left:0!important;padding-left:0!important;margin-left:0!important}
 </style>
@@ -401,7 +406,7 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
     <p style="color:var(--t3);font-size:.88rem">You do <em>not</em> need deep knowledge of the codebase. Judge the review text itself: is it specific and grounded in the diff, or vague and generic?</p>
 
     <h3>Reading aids</h3>
-    <p>Each review begins with a short summary of what that review claims. File badges show only whether a referenced file is <strong>in this PR</strong>, <strong>exists elsewhere in the project</strong>, or was <strong>not found</strong>. They do not say that the file is affected or that the review is correct. You can optionally turn on highlighting to locate text unique to each review. Highlighting starts off, and naming more files is not automatically better.</p>
+    <p>Each review begins with a short summary of what that review claims. Where a review names a file, that file path is marked with a dotted underline &mdash; hover over it (or focus it with the keyboard) to see what we found about that file when we checked the project. These notes describe the file only; they do not say that the review is correct. You can optionally turn on highlighting to locate text unique to each review. Highlighting starts off, and naming more files is not automatically better.</p>
 
     <h3>Using the diff (optional)</h3>
     <p>The diff shows exactly what code changed. It is collapsed by default &mdash; you can judge the reviews without it. Expand it when you want to check whether a review describes a real risk in the changed code or a hypothetical one.</p>
@@ -501,7 +506,7 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
   <div class="comparison-grid">
     <div class="review-card">
       <div class="review-card-header"><span style="width:24px;height:24px;border-radius:6px;background:#58a6ff;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff">A</span><span style="color:#58a6ff">Review A</span></div>
-      <div class="review-card-body"><div class="rsummary"><div class="rsummary-label">Summary of this review's claims &mdash; not verified facts</div><ul><li>Flags that the retry loop has <strong>no backoff</strong> between attempts, risking a burst of requests on transient failures.</li><li>Recommends <strong>exponential backoff</strong> and a test in <code>tests/test_api_client.py</code> for the exhausted-retries case.</li></ul></div><div class="rcounts"><div class="rcounts-label">Concrete items named (auto-counted &mdash; hover to see them)</div><div class="rcounts-chips"><span class="rcount-chip" title="Components/APIs:&#10;• ApiClient.fetch()&#10;• RequestException">Components/APIs <b>2</b></span><span class="rcount-chip" title="Files:&#10;• tests/test_api_client.py">Files <b>1</b></span><span class="rcount-chip" title="Test targets:&#10;• tests/test_api_client.py&#10;• exhausted-retries case">Test targets <b>2</b></span><span class="rcount-chip" title="Edge cases:&#10;• transient failure / rate limiting">Edge cases <b>1</b></span><span class="rcount-chip" title="Reasoned claims:&#10;• no backoff could overwhelm the server">Reasoned claims <b>1</b></span></div></div><div class="rverify"><div class="rverify-label">File check <span class="rverify-info" tabindex="0" title="Badges show only whether a referenced file is changed in this PR, exists elsewhere in the project, or was not found. They do not say the review is correct." aria-label="About file check badges">i</span></div><div class="rverify-note">Shows only whether each file exists in the example project.</div><div class="rverify-chips"><span class="rverify-chip v-exists">tests/test_api_client.py</span></div></div><div class="rcontent"><h2>Problems found</h2><p>The <code>fetch()</code> retry loop has <span class="uniq-A">no backoff between attempts</span>, so a transient failure turns into a tight burst of requests against the upstream service.</p><h2>Files and lines referenced</h2><p><code>ApiClient.fetch()</code>: <span class="uniq-A">the retry loop catches all <code>RequestException</code> subtypes including <code>ConnectionError</code> and <code>Timeout</code>, with no delay between attempts.</span></p><h2>What could go wrong</h2><p>Without backoff, rapid repeated requests could overwhelm the server or trigger rate limiting under transient failures.</p><h2>Suggestions</h2><p><span class="uniq-A">Add exponential backoff (e.g. <code>time.sleep(2 ** attempt)</code>) between retries. Add tests in <code>tests/test_api_client.py</code> covering the exhausted-retries case.</span></p></div></div>
+      <div class="review-card-body"><div class="rsummary"><div class="rsummary-label">Summary of this review's claims &mdash; not verified facts</div><ul><li>Flags that the retry loop has <strong>no backoff</strong> between attempts, risking a burst of requests on transient failures.</li><li>Recommends <strong>exponential backoff</strong> and a test in <code>tests/test_api_client.py</code> for the exhausted-retries case.</li></ul></div><div class="rcounts"><div class="rcounts-label">Concrete items named (auto-counted &mdash; hover to see them)</div><div class="rcounts-chips"><span class="rcount-chip" title="Components/APIs:&#10;• ApiClient.fetch()&#10;• RequestException">Components/APIs <b>2</b></span><span class="rcount-chip" title="Files:&#10;• tests/test_api_client.py">Files <b>1</b></span><span class="rcount-chip" title="Test targets:&#10;• tests/test_api_client.py&#10;• exhausted-retries case">Test targets <b>2</b></span><span class="rcount-chip" title="Edge cases:&#10;• transient failure / rate limiting">Edge cases <b>1</b></span><span class="rcount-chip" title="Reasoned claims:&#10;• no backoff could overwhelm the server">Reasoned claims <b>1</b></span></div></div><div class="rcontent"><h2>Problems found</h2><p>The <code>fetch()</code> retry loop has <span class="uniq-A">no backoff between attempts</span>, so a transient failure turns into a tight burst of requests against the upstream service.</p><h2>Files and lines referenced</h2><p><code>ApiClient.fetch()</code>: <span class="uniq-A">the retry loop catches all <code>RequestException</code> subtypes including <code>ConnectionError</code> and <code>Timeout</code>, with no delay between attempts.</span></p><h2>What could go wrong</h2><p>Without backoff, rapid repeated requests could overwhelm the server or trigger rate limiting under transient failures.</p><h2>Suggestions</h2><p><span class="uniq-A">Add exponential backoff (e.g. <code>time.sleep(2 ** attempt)</code>) between retries. Add tests in <code class="fref" tabindex="0" data-tip="This file exists in the project." data-tip-path="tests/test_api_client.py" aria-label="tests/test_api_client.py. This file exists in the project.">tests/test_api_client.py</code> covering the exhausted-retries case.</span></p></div></div>
     </div>
     <div class="review-card">
       <div class="review-card-header"><span style="width:24px;height:24px;border-radius:6px;background:#a371f7;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff">B</span><span style="color:#a371f7">Review B</span></div>
@@ -579,7 +584,7 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
       <div id="ctxC"></div>
     </div>
     <div id="bodySection" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--bg3);font-size:.88rem;color:var(--t1);line-height:1.5">
-      <div style="font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:5px">Original PR description (by the code's author — skim it, the plain-language box above covers the essentials)</div>
+      <div style="font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:5px">Original PR description</div>
       <div id="bodyC"></div>
     </div>
   </div>
@@ -671,9 +676,9 @@ kbd{display:inline-block;font-family:monospace;font-size:.7rem;background:var(--
 /* ═══════════════════════════════════════════════════════
    Human Evaluation Study — Python PRs
    - 6 PRs from small familiar Python repos (requests, flask, click)
-   - baseline_strict vs kg pairs with claim summaries, simple file-existence
-     badges, and
-     optional highlighting; criterion-mapped count strip omitted
+   - baseline_strict vs kg pairs with claim summaries, inline file-reference
+     tooltips, and optional highlighting; criterion-mapped count strip and the
+     former file-check badge strip both omitted
    - Order randomized per rater (seeded shuffle)
    - Single comparison per PR: baseline vs KG (blind A/B)
    - Task: per-criterion relevance (Review A / Both / Neither / Review B
@@ -936,11 +941,12 @@ function buildReviewPair(pr, taskId) {
     const summHtml = summ.length
       ? `<div class="rsummary"><div class="rsummary-label">Summary of this review's claims &mdash; not verified facts</div><ul>${summ.map(b=>`<li>${mdInline(b)}</li>`).join("")}</ul></div>`
       : "";
-    const verifyHtml = buildVerifyStrip((pr.answer_key || {})[asgn[lbl]]);
-    const reviewHtml = lbl==="A" ? shadedA : shadedB;
+    // File-audit findings are attached inline to each path in the review text.
     // Deliberately no count strip: its Components/APIs and Files values map
     // too directly to the primary F3* outcome.
-    card.innerHTML = `<div class="review-card-header"><span style="width:24px;height:24px;border-radius:6px;background:${color};display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;flex-shrink:0">${lbl}</span><span style="color:${color}">Review ${lbl}</span></div><div class="review-card-body">${summHtml}${verifyHtml}<div class="rcontent">${reviewHtml}</div></div>`;
+    const reviewHtml = annotateFileRefs(lbl==="A" ? shadedA : shadedB,
+                                        (pr.answer_key || {})[asgn[lbl]]);
+    card.innerHTML = `<div class="review-card-header"><span style="width:24px;height:24px;border-radius:6px;background:${color};display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;flex-shrink:0">${lbl}</span><span style="color:${color}">Review ${lbl}</span></div><div class="review-card-body">${summHtml}<div class="rcontent">${reviewHtml}</div></div>`;
     grid.appendChild(card);
   });
 }
@@ -968,28 +974,127 @@ function buildCountStrip(c) {
   return `<div class="rcounts"><div class="rcounts-label">Concrete items named (auto-counted &mdash; hover to see them)</div><div class="rcounts-chips">${chips}</div></div>`;
 }
 
-/* ═══ Simple file check (precomputed offline at the PR commit).
-   The richer relationship audit remains in study_data.json for researchers,
-   but raters only need to know whether a named file is in the PR, exists
-   elsewhere in the project, or was not found. ═══ */
-function buildVerifyStrip(ak) {
-  if (!ak || !Object.keys(ak).length) return "";
-  const order = { not_found:0, exists:1, in_pr:2 };
-  const chips = Object.entries(ak)
-    .map(([ref, raw]) => {
-      const ev = typeof raw === "string"
-        ? {existence: raw==="not_found" ? "not_found" : "exists",
-           relationship: raw==="in_diff" ? "changed" : raw}
-        : raw;
-      const status = ev.existence==="not_found"
-        ? "not_found" : ev.relationship==="changed" ? "in_pr" : "exists";
-      return [ref, status];
-    })
-    .sort((a,b)=>(order[a[1]]??9)-(order[b[1]]??9))
-    .map(([ref,status])=>`<span class="rverify-chip v-${status}">${_attr(ref)}</span>`)
-    .join("");
-  return `<div class="rverify"><div class="rverify-label">File check <span class="rverify-info" tabindex="0" title="Badges show only whether a referenced file is changed in this PR, exists elsewhere in the project, or was not found. They do not say the file is affected or the review is correct." aria-label="About file check badges">i</span></div><div class="rverify-note">Shows only whether each file is in this PR, exists elsewhere in the project, or was not found. It does not say the file is affected or the review is correct.</div><div class="rverify-chips">${chips}</div></div>`;
+/* ═══ Inline file-reference annotation (precomputed offline at the PR commit).
+   The audit's finding for a referenced file is attached to that file where it
+   is mentioned in the review, instead of being hoisted into a separate strip.
+   The strip was withdrawn because its badge palette was a perfect arm
+   signature on the frozen stimuli: baseline reviews produced an all-"in this
+   PR" strip while kg reviews produced a mixed one, letting a rater sort the
+   arms without reading a word. Here every reference looks the same and only
+   the tooltip text differs. ═══ */
+function _tipText(ev) {
+  if (!ev) return "";
+  if (typeof ev === "string") {
+    return ev === "not_found"
+      ? "This path was not found in the project at this commit."
+      : ev === "in_diff"
+        ? "This file is changed by the PR itself."
+        : "This file exists in the project.";
+  }
+  if (ev.basis) return ev.basis;
+  if (ev.existence === "not_found") return "This path was not found in the project at this commit.";
+  if (ev.relationship === "changed") return "This file is changed by the PR itself.";
+  return "This file exists in the project.";
 }
+
+/* Wrap each audited path where it occurs in the rendered review. Returns HTML.
+   Matching is by prefix so that "src/click/utils.py:232-311" is annotated by
+   the entry for "src/click/utils.py". */
+function annotateFileRefs(html, ak) {
+  if (!ak || !Object.keys(ak).length) return html;
+  const root = document.createElement("div");
+  root.innerHTML = html;
+  // Longest first, so a nested path never gets claimed by a shorter prefix.
+  const paths = Object.keys(ak).sort((a, b) => b.length - a.length);
+
+  const annotate = (el) => {
+    const tip = (p) => _tipText(ak[p]);
+    // Inline code spans usually carry the whole reference, range suffix and all.
+    el.querySelectorAll("code").forEach(c => {
+      if (c.closest("pre") || c.classList.contains("fref")) return;
+      const t = c.textContent || "";
+      const hit = paths.find(p => t.includes(p));
+      if (!hit) return;
+      c.classList.add("fref");
+      c.setAttribute("tabindex", "0");
+      c.dataset.tip = tip(hit);
+      c.dataset.tipPath = hit;
+      c.setAttribute("aria-label", `${t}. ${tip(hit)}`);
+    });
+    // Any remaining bare-text mentions outside code spans.
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => (n.parentElement.closest("pre,code,.fref"))
+        ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    });
+    const targets = [];
+    let n;
+    while ((n = walker.nextNode())) {
+      const hit = paths.find(p => n.nodeValue.includes(p));
+      if (hit) targets.push([n, hit]);
+    }
+    targets.forEach(([node, hit]) => {
+      const idx = node.nodeValue.indexOf(hit);
+      const after = node.splitText(idx);
+      after.splitText(hit.length);
+      const span = document.createElement("span");
+      span.className = "fref";
+      span.setAttribute("tabindex", "0");
+      span.dataset.tip = tip(hit);
+      span.dataset.tipPath = hit;
+      span.setAttribute("aria-label", `${hit}. ${tip(hit)}`);
+      span.textContent = hit;
+      after.parentNode.replaceChild(span, after);
+    });
+  };
+  annotate(root);
+  return root.innerHTML;
+}
+
+/* One shared tooltip on <body>. The review card is overflow:hidden, so a
+   pseudo-element tooltip would be clipped inside the scrolling panel. */
+let _ftipEl = null;
+function _ftip() {
+  if (!_ftipEl) {
+    _ftipEl = document.createElement("div");
+    _ftipEl.className = "ftip";
+    document.body.appendChild(_ftipEl);
+  }
+  return _ftipEl;
+}
+function _showTip(el) {
+  const tip = el.dataset.tip;
+  if (!tip) return;
+  const t = _ftip();
+  t.innerHTML = `<span class="ftip-path">${_attr(el.dataset.tipPath || "")}</span>${_attr(tip)}`;
+  t.classList.add("on");
+  const r = el.getBoundingClientRect();
+  const tr = t.getBoundingClientRect();
+  let left = r.left + r.width / 2 - tr.width / 2;
+  left = Math.max(8, Math.min(left, window.innerWidth - tr.width - 8));
+  let top = r.top - tr.height - 8;
+  if (top < 8) top = r.bottom + 8;          // flip below when clipped at the top
+  t.style.left = left + "px";
+  t.style.top = top + "px";
+}
+function _hideTip() { if (_ftipEl) _ftipEl.classList.remove("on"); }
+
+// Delegated, so it covers warmup and main trials and survives re-rendering.
+document.addEventListener("mouseover", e => {
+  const el = e.target.closest && e.target.closest(".fref");
+  if (el) _showTip(el);
+});
+document.addEventListener("mouseout", e => {
+  if (e.target.closest && e.target.closest(".fref")) _hideTip();
+});
+document.addEventListener("focusin", e => {
+  const el = e.target.closest && e.target.closest(".fref");
+  if (el) _showTip(el);
+});
+document.addEventListener("focusout", e => {
+  if (e.target.closest && e.target.closest(".fref")) _hideTip();
+});
+window.addEventListener("scroll", _hideTip, true);
+document.addEventListener("keydown", e => { if (e.key === "Escape") _hideTip(); });
 
 /* ═══ Per-criterion relevance (Review A / Both / Neither / Review B for each of 6 criteria) ═══ */
 // Criterion ids contain "*" (F3*, F2*), which is invalid in a radio name —
